@@ -1,4 +1,10 @@
-﻿# Build and Object Folders  
+# JetBrains Rider/IntelliJ IDEA 生成的目录
+.idea/
+
+# macOS 系统文件
+.DS_Store
+
+# Build and Object Folders  
 bin/  
 obj/  
   
