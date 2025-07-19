@@ -12,29 +12,29 @@ public class Program
 
 
         // 配置 NLog
-builder.Logging.ClearProviders();
-builder.Host.UseNLog();
+        builder.Logging.ClearProviders();
+        builder.Host.UseNLog();
 
-builder.Services.AddControllers(options => { options.Filters.Add<ApiResponseFilter>(); });
+        builder.Services.AddControllers(options => { options.Filters.Add<ApiResponseFilter>(); });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Register();
-builder.Services.AddSwaggerGen();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Register();
+        builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+        var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
 // app.UseHttpsRedirection();
 
-app.MapControllers();
+        app.MapControllers();
 
-app.Run();
+        app.Run();
     }
 }
