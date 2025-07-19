@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeSi.Admin.Contracts\LeSi.Admin.Contracts.csproj" />
+    <ProjectReference Include="..\LeSi.Admin.Domain\LeSi.Admin.Domain.csproj" />
+    <ProjectReference Include="..\LeSi.Admin.Infrastructure\LeSi.Admin.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="MediatR" Version="13.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Area\CommandHandlers\" />
+    <Folder Include="Dictionary\CommandHandlers\" />
+  </ItemGroup>
+
+</Project>
