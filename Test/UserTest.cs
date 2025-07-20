@@ -28,8 +28,8 @@ namespace Test
 
 
             // 准备登录数据
-            string username = "lbh";
-            string password = "1qazZAQ!";
+            string username = "lbhlbh";
+            string password = "123456";
             
             // 使用公钥加密用户名和密码
             var encryptedUsername = EncryptWithPublicKey(publicKeyResult.PublicKey, username);
