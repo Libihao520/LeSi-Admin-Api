@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -26,6 +27,14 @@ public interface IDatabase
     /// </summary>
     /// <returns></returns>
     Task Rollback();
+
+    /// <summary>
+    /// 根据条件获取单条数据
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="predicate">查询条件</param>
+    /// <returns>符合条件的单条数据，如果没有则返回null</returns>
+    Task<T?> FindEntity<T>(Expression<Func<T, bool>> predicate) where T : class, new();
 
     /// <summary>
     /// 查询

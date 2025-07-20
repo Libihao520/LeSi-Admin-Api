@@ -25,12 +25,6 @@ public class DictionaryQueryHandler : RepositoryFactory,
 
         var dictionaryDto = _mapper.Map<List<Dtos.DictionaryDto>>(dictionaryEntities);
 
-        var userRepository =  UserRepository();
-        var findList = await userRepository.FindList<UsersEntity>();
-        foreach (var usersEntity in findList)
-        {
-            Console.WriteLine(usersEntity);
-        }
         return dictionaryDto;
     }
 }

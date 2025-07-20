@@ -1,7 +1,9 @@
 using LeSi.Admin.Application;
 using LeSi.Admin.Application.Dictionary.QueryHandlers;
+using LeSi.Admin.Domain.Interfaces;
 using LeSi.Admin.Infrastructure.CaChe;
 using LeSi.Admin.Infrastructure.Config;
+using LeSi.Admin.Infrastructure.Services;
 using StackExchange.Redis;
 
 
@@ -32,6 +34,11 @@ public static class HostBuilderExtend
         // 作为普通服务注册（通过接口）
         builder.Services.AddSingleton<IKeyPairManager, KeyPairManager>();
         // 作为托管服务注册（复用同一个实例）
-        builder.Services.AddHostedService(provider => provider.GetRequiredService<IKeyPairManager>() as KeyPairManager ?? throw new InvalidOperationException("KeyPairManager not found"));
+        builder.Services.AddHostedService(provider =>
+            provider.GetRequiredService<IKeyPairManager>() as KeyPairManager ??
+            throw new InvalidOperationException("KeyPairManager not found"));
+        
+        // 注册 TokenService
+        builder.Services.AddTransient<ITokenService, TokenService>();
     }
 }

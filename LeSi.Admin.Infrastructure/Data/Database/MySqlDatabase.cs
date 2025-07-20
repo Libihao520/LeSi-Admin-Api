@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+using System.Linq.Expressions;
 using LeSi.Admin.Infrastructure.Data.DbContexts;
 using LeSi.Admin.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,9 @@ public class MySqlDatabase : IDatabase
 
     public IDbContextTransaction dbContextTransaction { get; set; }
 
-    public MySqlDatabase(DatabaseCategory category,string connString,int dbTimeout)
+    public MySqlDatabase(DatabaseCategory category, string connString, int dbTimeout)
     {
-        DbContext = new MySqlDbContext(category,connString,dbTimeout);
+        DbContext = new MySqlDbContext(category, connString, dbTimeout);
     }
 
 
@@ -47,6 +48,17 @@ public class MySqlDatabase : IDatabase
     public Task Rollback()
     {
         throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// 根据条件获取单条数据
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="predicate">查询条件</param>
+    /// <returns>符合条件的单条数据，如果没有则返回null</returns>
+    public async Task<T?> FindEntity<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+    {
+        return await DbContext.Set<T>().FirstOrDefaultAsync(predicate);
     }
 
     public async Task<IEnumerable<T>> FindList<T>() where T : class, new()
