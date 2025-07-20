@@ -69,7 +69,7 @@ public class GetTokenQueryHandler : RepositoryFactory, IRequestHandler<Queries.L
         }
 
         var token = _tokenService.GetToken(user, privateKey);
-        _redisCache.Set(user.Name, token, TimeSpan.FromDays(1));
+        _redisCache.Set(user.Name, token, TimeSpan.FromMinutes(30));
         return new Dtos.LoginDto { Token = token };
     }
 }
