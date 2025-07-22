@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using LeSi.Admin.Domain.Attributes;
-using LeSi.Admin.Infrastructure.Config;
+using LeSi.Admin.Domain.Enums;
 using LeSi.Admin.Infrastructure.Data.Database;
 using LeSi.Admin.Infrastructure.Data.Interceptors;
 using Microsoft.EntityFrameworkCore;

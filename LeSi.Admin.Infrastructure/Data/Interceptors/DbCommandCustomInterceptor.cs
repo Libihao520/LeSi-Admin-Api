@@ -10,19 +10,20 @@ namespace LeSi.Admin.Infrastructure.Data.Interceptors;
 /// </summary>
 public class DbCommandCustomInterceptor : DbCommandInterceptor
 {
+    
     public override InterceptionResult<DbDataReader> ReaderExecuting(
         DbCommand command,
         CommandEventData eventData,
         InterceptionResult<DbDataReader> result)
     {
         // 打印 SQL 和参数
-        LogHelper.Info($"Executing SQL: {command.CommandText}");
+        // LogHelper.Info($"Executing SQL: {command.CommandText}");
         if (command.Parameters.Count > 0)
         {
-            LogHelper.Info("Parameters:");
+            // LogHelper.Info("Parameters:");
             foreach (DbParameter p in command.Parameters)
             {
-                LogHelper.Info($"  {p.ParameterName} = {p.Value}");
+                // LogHelper.Info($"  {p.ParameterName} = {p.Value}");
             }
         }
 
@@ -31,7 +32,7 @@ public class DbCommandCustomInterceptor : DbCommandInterceptor
         var originalResult = base.ReaderExecuting(command, eventData, result);
         stopwatch.Stop();
 
-        LogHelper.Info($"Execution Time: {stopwatch.ElapsedMilliseconds}ms");
+        // LogHelper.Info($"Execution Time: {stopwatch.ElapsedMilliseconds}ms");
         return originalResult;
     }
     
@@ -42,7 +43,7 @@ public class DbCommandCustomInterceptor : DbCommandInterceptor
         InterceptionResult<DbDataReader> result,
         CancellationToken cancellationToken = default)
     {
-        LogHelper.Info($"Executing SQL (Async): {command.CommandText}");
+        // LogHelper.Info($"Executing SQL (Async): {command.CommandText}");
         return base.ReaderExecutingAsync(command, eventData, result, cancellationToken);
     }
 }

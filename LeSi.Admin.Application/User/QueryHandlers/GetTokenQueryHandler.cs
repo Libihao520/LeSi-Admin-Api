@@ -3,26 +3,26 @@ using System.Text;
 using LeSi.Admin.Contracts.User;
 using LeSi.Admin.Domain.Entities.User;
 using LeSi.Admin.Domain.Interfaces;
-using LeSi.Admin.Infrastructure.CaChe;
-using LeSi.Admin.Infrastructure.Repository;
 using LeSi.Admin.Shared.Utilities.Encryption;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LeSi.Admin.Application.User.QueryHandlers;
 
-public class GetTokenQueryHandler : RepositoryFactory, IRequestHandler<Queries.LoginDtoQuery, Dtos.LoginDto>
+public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.LoginDto>
 {
     private readonly ICache _memoryCache;
     private readonly ICache _redisCache;
     private readonly ITokenService _tokenService;
+    private readonly IRepositoryFactory _repositoryFactory;
 
     public GetTokenQueryHandler([FromKeyedServices("MemoryCache")] ICache memoryCache,
-        [FromKeyedServices("RedisCache")] ICache redisCache, ITokenService tokenService)
+        [FromKeyedServices("RedisCache")] ICache redisCache, ITokenService tokenService, IRepositoryFactory repositoryFactory)
     {
         _memoryCache = memoryCache;
         _redisCache = redisCache;
         _tokenService = tokenService;
+        _repositoryFactory = repositoryFactory;
     }
 
     public async Task<Dtos.LoginDto> Handle(Queries.LoginDtoQuery request, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ public class GetTokenQueryHandler : RepositoryFactory, IRequestHandler<Queries.L
             throw new InvalidOperationException("解密失败：私钥无效或数据格式错误", ex);
         }
 
-        var userRepository = UserRepository();
+        var userRepository = _repositoryFactory.UserRepository();
 
         var user = await userRepository.FindEntity<UsersEntity>(u => u.Name == decryptedUsername);
         if (user == null)

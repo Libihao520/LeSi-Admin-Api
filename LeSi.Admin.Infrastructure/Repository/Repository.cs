@@ -1,6 +1,7 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LeSi.Admin.Domain.Interfaces;
 using LeSi.Admin.Infrastructure.Data.Database;
 
 namespace LeSi.Admin.Infrastructure.Repository
@@ -8,7 +9,7 @@ namespace LeSi.Admin.Infrastructure.Repository
     /// <summary>
     /// 通用仓储基类，定义数据标准操作
     /// </summary>
-    public class Repository
+    public class Repository: IRepository
     {
         public IDatabase db;
 
@@ -17,7 +18,7 @@ namespace LeSi.Admin.Infrastructure.Repository
             this.db = iDatabase;
         }
 
-        public async Task<Repository> BeginTrans()
+        public async Task<IRepository> BeginTrans()
         {
             await db.BeginTrans();
             return this;

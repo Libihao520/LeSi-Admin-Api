@@ -1,6 +1,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
+using LeSi.Admin.Domain.Enums;
 using LeSi.Admin.Infrastructure.Data.DbContexts;
 using LeSi.Admin.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;

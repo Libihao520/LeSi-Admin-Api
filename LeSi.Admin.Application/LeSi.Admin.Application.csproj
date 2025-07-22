@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\LeSi.Admin.Contracts\LeSi.Admin.Contracts.csproj" />
     <ProjectReference Include="..\LeSi.Admin.Domain\LeSi.Admin.Domain.csproj" />
-    <ProjectReference Include="..\LeSi.Admin.Infrastructure\LeSi.Admin.Infrastructure.csproj" />
     <ProjectReference Include="..\LeSi.Admin.Shared\LeSi.Admin.Shared.csproj" />
   </ItemGroup>
 
@@ -21,6 +20,7 @@
   <ItemGroup>
     <Folder Include="Area\CommandHandlers\" />
     <Folder Include="Dictionary\CommandHandlers\" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

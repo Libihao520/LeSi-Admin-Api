@@ -1,16 +1,18 @@
-using LeSi.Admin.Infrastructure.Config;
+using LeSi.Admin.Contracts.Config;
+using LeSi.Admin.Domain.Enums;
+using LeSi.Admin.Domain.Interfaces;
 using LeSi.Admin.Infrastructure.Data.Database;
 
 namespace LeSi.Admin.Infrastructure.Repository;
 
-public class RepositoryFactory
+public class RepositoryFactory: IRepositoryFactory
 {
     /// <summary>
     /// 根据数据库分类获取对应的 Repository 实例
     /// </summary>
     /// <param name="category">数据库分类枚举值</param>
     /// <returns>对应的 Repository 实例</returns>
-    private Repository GetRepository(DatabaseCategory category)
+    public IRepository GetRepository(DatabaseCategory category)
     {
         IDatabase database = null;
         string dbType = GlobalContext.SystemConfig.DbProvider;
@@ -55,7 +57,7 @@ public class RepositoryFactory
     /// 获取用户库的 Repository 实例
     /// </summary>
     /// <returns>用户库的 Repository 实例</returns>
-    public Repository UserRepository()
+    public IRepository UserRepository()
     {
         return GetRepository(DatabaseCategory.User);
     }
@@ -64,7 +66,7 @@ public class RepositoryFactory
     /// 获取字典库的 Repository 实例
     /// </summary>
     /// <returns>字典库的 Repository 实例</returns>
-    public Repository DictionaryRepository()
+    public IRepository DictionaryRepository()
     {
         return GetRepository(DatabaseCategory.Dictionary);
     }

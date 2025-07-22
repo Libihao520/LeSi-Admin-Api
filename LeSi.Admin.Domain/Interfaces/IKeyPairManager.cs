@@ -1,8 +1,6 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace LeSi.Admin.Infrastructure.CaChe
+namespace LeSi.Admin.Domain.Interfaces
 {
     public interface IKeyPairManager : IHostedService, IDisposable
     {

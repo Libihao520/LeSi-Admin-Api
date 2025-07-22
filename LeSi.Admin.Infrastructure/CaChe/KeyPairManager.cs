@@ -1,13 +1,17 @@
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
+using LeSi.Admin.Contracts.Logging;
+using LeSi.Admin.Domain.Interfaces;
 using Microsoft.Extensions.Hosting;
 using LeSi.Admin.Infrastructure.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
 
 namespace LeSi.Admin.Infrastructure.CaChe
 {
     public class KeyPairManager : IHostedService, IDisposable, IKeyPairManager
     {
+        private readonly IAppLogger _logger;
         private readonly ICache _cache; // 缓存接口
         private Timer _timer; // 定期检查的计时器
         private readonly CancellationTokenSource _cancellationTokenSource = new(); // 取消令牌源
@@ -19,9 +23,10 @@ namespace LeSi.Admin.Infrastructure.CaChe
         private const int CheckIntervalMinutes = 1; // 检查间隔(分钟)
         private bool _disposed = false; // 是否已释放资源
 
-        public KeyPairManager([FromKeyedServices("RedisCache")] ICache cache)
+        public KeyPairManager([FromKeyedServices("RedisCache")] ICache cache, IAppLogger logger)
         {
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -58,7 +63,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
                     }
 
                     _cache.Set(BackupCacheKey, currentPairs, TimeSpan.FromDays(365 * 10));
-                    LogHelper.Info($"密钥对初始化完成。当前备用密钥数量：{currentPairs.Count}");
+                    _logger.Info($"密钥对初始化完成。当前备用密钥数量：{currentPairs.Count}");
                 }
             }
             catch (OperationCanceledException) when (_cancellationTokenSource.IsCancellationRequested)
@@ -67,7 +72,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
             }
             catch (Exception ex)
             {
-                LogHelper.Error("密钥对初始化失败", ex);
+                _logger.Error("密钥对初始化失败", ex);
             }
             finally
             {
@@ -88,7 +93,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
                 var currentPairs =
                     _cache.Get<ConcurrentDictionary<string, string>>(BackupCacheKey)
                     ?? new ConcurrentDictionary<string, string>();
-                LogHelper.Info($"定时任务：当前备用密钥数量：{currentPairs.Count}");
+                _logger.Info($"定时任务：当前备用密钥数量：{currentPairs.Count}");
 
                 if (currentPairs.Count < RefillThreshold)
                 {
@@ -101,7 +106,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
                     }
 
                     _cache.Set(BackupCacheKey, currentPairs, TimeSpan.FromDays(365 * 10));
-                    LogHelper.Info($"已补充 {needToGenerate} 个密钥对。当前备用密钥数量：{currentPairs.Count}");
+                    _logger.Info($"已补充 {needToGenerate} 个密钥对。当前备用密钥数量：{currentPairs.Count}");
                 }
             }
             catch (OperationCanceledException) when (_cancellationTokenSource.IsCancellationRequested)
@@ -110,7 +115,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
             }
             catch (Exception ex)
             {
-                LogHelper.Error("密钥对检查补充失败", ex);
+                _logger.Error("密钥对检查补充失败", ex);
             }
             finally
             {
@@ -153,7 +158,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
                     _cache.Get<ConcurrentDictionary<string, string>>(BackupCacheKey);
                 if (backupPairs == null || backupPairs.Count == 0)
                 {
-                    LogHelper.Warn("备用密钥对不足，无法获取");
+                    _logger.Warn("备用密钥对不足，无法获取");
                     return null;
                 }
 
@@ -162,7 +167,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
                 {
                     if (string.IsNullOrEmpty(firstPair.Key))
                     {
-                        LogHelper.Warn("获取的密钥对公钥为空，跳过存储");
+                        _logger.Warn("获取的密钥对公钥为空，跳过存储");
                         return null;
                     }
 
@@ -180,7 +185,7 @@ namespace LeSi.Admin.Infrastructure.CaChe
             }
             catch (Exception ex)
             {
-                LogHelper.Error("获取并转移密钥对失败", ex);
+                _logger.Error("获取并转移密钥对失败", ex);
                 return null;
             }
             finally

@@ -1,29 +1,26 @@
 ﻿using AutoMapper;
-using LeSi.Admin.Contracts.Dictionary;
-using LeSi.Admin.Domain.Entities.SystemManage;
-using LeSi.Admin.Infrastructure.CaChe;
-using LeSi.Admin.Infrastructure.Repository;
+using LeSi.Admin.Contracts.Logging;
+using LeSi.Admin.Domain.Interfaces;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Queries = LeSi.Admin.Contracts.User.Queries;
 
 namespace LeSi.Admin.Application.User.QueryHandlers;
 
-public class GetPublicKeyQueryHandler : RepositoryFactory,
-    IRequestHandler<Contracts.User.Queries.GetPublicKeyDtoQuery, Contracts.User.Dtos.GetPublicKeyDto>
+public class GetPublicKeyQueryHandler : IRequestHandler<Contracts.User.Queries.GetPublicKeyDtoQuery,
+    Contracts.User.Dtos.GetPublicKeyDto>
 {
-    private readonly IMapper _mapper;
-    private readonly ICache _memoryCache;
-    private readonly ICache _redisCache;
-    private readonly IKeyPairManager _keyPairManager;
+    private readonly IAppLogger _logger;
 
-    public GetPublicKeyQueryHandler(IMapper mapper, [FromKeyedServices("MemoryCache")] ICache memoryCache,
-        [FromKeyedServices("RedisCache")] ICache redisCache, IKeyPairManager keyPairManager)
+    private readonly IMapper _mapper;
+    private readonly IKeyPairManager _keyPairManager;
+    private readonly IRepositoryFactory _repositoryFactory;
+
+    public GetPublicKeyQueryHandler(IMapper mapper,
+        IKeyPairManager keyPairManager, IAppLogger logger)
     {
         _mapper = mapper;
-        _memoryCache = memoryCache;
-        _redisCache = redisCache;
         _keyPairManager = keyPairManager;
+        _logger = logger;
     }
 
     public async Task<Contracts.User.Dtos.GetPublicKeyDto> Handle(Queries.GetPublicKeyDtoQuery command,

@@ -1,20 +1,30 @@
 using System.Data.Common;
 using LeSi.Admin.Contracts.Area;
-using LeSi.Admin.Infrastructure.Extensions;
-using LeSi.Admin.Infrastructure.Logging;
-using LeSi.Admin.Infrastructure.Repository;
+using LeSi.Admin.Contracts.Logging;
+using LeSi.Admin.Domain.Interfaces;
 using MediatR;
+using Microsoft.IdentityModel.Logging;
 
 
 namespace LeSi.Admin.Application.Area.QueryHandlers;
 
-public class AreaQueryHandler : RepositoryFactory, IRequestHandler<Queries.GetAreaDtoQuery, List<Dtos.AreaDto>>
+public class AreaQueryHandler : IRequestHandler<Queries.GetAreaDtoQuery, List<Dtos.AreaDto>>
 {
+    private readonly IAppLogger _logger;
+    private readonly IRepositoryFactory _repositoryFactory;
+    private readonly IDatabaseParameterFactory _parameterFactory;
+    public AreaQueryHandler(IAppLogger logger, IRepositoryFactory repositoryFactory, IDatabaseParameterFactory parameterFactory)
+    {
+        _logger = logger;
+        _repositoryFactory = repositoryFactory;
+        _parameterFactory = parameterFactory;
+    }
+
     public async Task<List<Dtos.AreaDto>> Handle(Queries.GetAreaDtoQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            LogHelper.Info("开始处理区域查询请求");
+            _logger.Info("开始处理区域查询请求");
             var sql = @"
 SELECT 
     LEFT(tbl_region_province.region_code,2)     as Sheng,
@@ -32,14 +42,14 @@ LEFT JOIN tbl_region_township ON  LEFT(tbl_region_county.region_code, 6) = LEFT(
 WHERE LEFT(tbl_region_province.region_code,2) = @Code
 ";
             var parameter = new List<DbParameter>();
-            parameter.Add(DatabasesExtension.CreateDbParameter("@Code", request.Code));
+            parameter.Add(_parameterFactory.CreateParameter("@Code", request.Code));
 
-            var areaList = await DictionaryRepository().FindList<Dtos.AreaDto>(sql, parameter.ToArray());
+            var areaList = await _repositoryFactory.DictionaryRepository().FindList<Dtos.AreaDto>(sql, parameter.ToArray());
             return areaList.ToList();
         }
         catch (Exception ex)
         {
-            LogHelper.Error("查询异常日志", ex);
+            _logger.Error("查询异常日志", ex);
             throw;
         }
     }

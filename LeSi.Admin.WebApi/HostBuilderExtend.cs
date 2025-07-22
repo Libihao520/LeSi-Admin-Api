@@ -1,8 +1,12 @@
 using LeSi.Admin.Application;
 using LeSi.Admin.Application.Dictionary.QueryHandlers;
+using LeSi.Admin.Contracts.Config;
+using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Domain.Interfaces;
 using LeSi.Admin.Infrastructure.CaChe;
-using LeSi.Admin.Infrastructure.Config;
+using LeSi.Admin.Infrastructure.Data.Database;
+using LeSi.Admin.Infrastructure.Logging;
+using LeSi.Admin.Infrastructure.Repository;
 using LeSi.Admin.Infrastructure.Services;
 using StackExchange.Redis;
 
@@ -13,6 +17,8 @@ public static class HostBuilderExtend
 {
     public static void Register(this WebApplicationBuilder builder)
     {
+        builder.Services.AddSingleton<IAppLogger, NLogLogger>();
+        
         GlobalContext.SystemConfig = builder.Configuration
             .GetSection("SystemConfig")
             .Get<SystemConfig>() ?? throw new InvalidOperationException("SystemConfig 配置缺失或格式错误");
@@ -40,5 +46,7 @@ public static class HostBuilderExtend
         
         // 注册 TokenService
         builder.Services.AddTransient<ITokenService, TokenService>();
+        builder.Services.AddScoped<IDatabaseParameterFactory, DatabaseParameterFactory>();
+        builder.Services.AddScoped<IRepositoryFactory, RepositoryFactory>();
     }
 }
