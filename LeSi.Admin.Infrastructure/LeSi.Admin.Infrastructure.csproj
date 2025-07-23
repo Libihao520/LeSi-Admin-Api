@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Utils\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\LeSi.Admin.Contracts\LeSi.Admin.Contracts.csproj" />
     <ProjectReference Include="..\LeSi.Admin.Domain\LeSi.Admin.Domain.csproj" />
   </ItemGroup>

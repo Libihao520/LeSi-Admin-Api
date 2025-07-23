@@ -43,7 +43,7 @@ public class Program
         app.MapControllers();
 
         // 映射 gRPC 服务
-        app.MapGrpcService<LeSi.Admin.WebApi.ProtoService.PublicKeyService>();
+        app.MapGrpcService<LeSi.Admin.WebApi.ProtoService.AuthService>();
 
         if (app.Environment.IsDevelopment())
         {
