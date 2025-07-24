@@ -17,7 +17,8 @@ public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.
     private readonly IRepositoryFactory _repositoryFactory;
 
     public GetTokenQueryHandler([FromKeyedServices("MemoryCache")] ICache memoryCache,
-        [FromKeyedServices("RedisCache")] ICache redisCache, ITokenService tokenService, IRepositoryFactory repositoryFactory)
+        [FromKeyedServices("RedisCache")] ICache redisCache, ITokenService tokenService,
+        IRepositoryFactory repositoryFactory)
     {
         _memoryCache = memoryCache;
         _redisCache = redisCache;
@@ -69,7 +70,8 @@ public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.
         }
 
         var token = _tokenService.GetToken(user, privateKey);
-        _redisCache.Set(user.Name, token, TimeSpan.FromMinutes(30));
+
+        _redisCache.Set(token, request.PublicKey, TimeSpan.FromMinutes(30));
         return new Dtos.LoginDto { Token = token };
     }
 }
