@@ -17,7 +17,7 @@ public class TokenService : ITokenService
         // TODO 后面改成URL
         var issuer = "LeSi.Admin";
         var audience = "LeSi.Client";
-        var expires = DateTime.Now.AddHours(2); // 2小时有效期
+        var expires = DateTime.Now.AddDays(2); // 2天有效期
 
         var credentials = new SigningCredentials(
             new RsaSecurityKey(rsa),
