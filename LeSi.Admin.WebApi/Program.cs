@@ -9,7 +9,11 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        builder.Configuration
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile(
+                $"appsettings.{(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true" ? "Docker" : "Development")}.json",
+                optional: true);
 
         // 配置 NLog
         builder.Logging.ClearProviders();
