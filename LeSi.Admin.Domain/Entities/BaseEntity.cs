@@ -7,5 +7,5 @@ public abstract class BaseEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    public long Id { get; set; }
 }
