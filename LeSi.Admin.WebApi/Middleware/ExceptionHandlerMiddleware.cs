@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Infrastructure.Shared;
 
 namespace LeSi.Admin.WebApi.Middleware;
@@ -7,10 +8,11 @@ namespace LeSi.Admin.WebApi.Middleware;
 public class ExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
-
-    public ExceptionHandlerMiddleware(RequestDelegate next)
+    private readonly IAppLogger _logger;
+    public ExceptionHandlerMiddleware(RequestDelegate next, IAppLogger logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -21,6 +23,7 @@ public class ExceptionHandlerMiddleware
         }
         catch (Exception ex)
         {
+            _logger.Error( "全局异常捕获：{ErrorMessage}", ex);
             await HandleExceptionAsync(context, ex);
         }
     }
