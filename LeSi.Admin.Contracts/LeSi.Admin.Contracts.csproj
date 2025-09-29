@@ -14,4 +14,8 @@
     <Folder Include="Repositories\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LeSi.Admin.Shared\LeSi.Admin.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
