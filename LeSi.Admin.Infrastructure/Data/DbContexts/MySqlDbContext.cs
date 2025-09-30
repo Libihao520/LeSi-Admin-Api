@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using LeSi.Admin.Domain.Attributes;
-using LeSi.Admin.Domain.Enums;
 using LeSi.Admin.Infrastructure.Data.Database;
 using LeSi.Admin.Infrastructure.Data.Interceptors;
+using LeSi.Admin.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeSi.Admin.Infrastructure.Data.DbContexts;

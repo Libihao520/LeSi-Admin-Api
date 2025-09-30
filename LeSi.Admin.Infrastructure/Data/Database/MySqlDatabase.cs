@@ -1,9 +1,9 @@
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
-using LeSi.Admin.Domain.Enums;
 using LeSi.Admin.Infrastructure.Data.DbContexts;
 using LeSi.Admin.Infrastructure.Extensions;
+using LeSi.Admin.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 

@@ -1,4 +1,4 @@
-namespace LeSi.Admin.Domain.Enums;
+namespace LeSi.Admin.Shared.Enums;
 
 /// <summary>
 /// 数据库类型枚举

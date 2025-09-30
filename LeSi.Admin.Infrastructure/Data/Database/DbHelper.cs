@@ -1,7 +1,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
-using LeSi.Admin.Domain.Enums;
+using LeSi.Admin.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;

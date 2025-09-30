@@ -1,4 +1,4 @@
-using LeSi.Admin.Domain.Enums;
+using LeSi.Admin.Shared.Enums;
 
 namespace LeSi.Admin.Domain.Interfaces;
 
