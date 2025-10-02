@@ -1,7 +1,7 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 
-namespace LeSi.Admin.Domain.Interfaces;
+namespace LeSi.Admin.Domain.Interfaces.Repository;
 
 public interface IRepository
 {

@@ -1,4 +1,4 @@
-namespace LeSi.Admin.Contracts.Config;
+namespace LeSi.Admin.Infrastructure.Config;
 
 public class GlobalContext
 {

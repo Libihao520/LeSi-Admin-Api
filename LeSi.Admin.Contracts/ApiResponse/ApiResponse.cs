@@ -1,4 +1,4 @@
-namespace LeSi.Admin.Infrastructure.Shared;
+namespace LeSi.Admin.Contracts.ApiResponse;
 
 public class ApiResponse<T>
 {

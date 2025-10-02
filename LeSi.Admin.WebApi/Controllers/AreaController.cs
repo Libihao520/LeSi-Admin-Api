@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Dtos = LeSi.Admin.Contracts.Area.Dtos;
-using Queries = LeSi.Admin.Contracts.Area.Queries;
+using Dtos = LeSi.Admin.Contracts.Models.Area.Dtos;
+using Queries = LeSi.Admin.Contracts.Models.Area.Queries;
 
 namespace LeSi.Admin.WebApi.Controllers;
 

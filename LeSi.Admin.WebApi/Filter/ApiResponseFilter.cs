@@ -1,4 +1,4 @@
-using LeSi.Admin.Infrastructure.Shared;
+using LeSi.Admin.Contracts.ApiResponse;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

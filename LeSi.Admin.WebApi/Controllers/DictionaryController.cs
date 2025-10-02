@@ -1,6 +1,6 @@
 using LeSi.Admin.Application;
 using LeSi.Admin.Contracts;
-using LeSi.Admin.Contracts.Dictionary;
+using LeSi.Admin.Contracts.Models.Dictionary;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

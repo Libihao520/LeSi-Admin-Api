@@ -1,8 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
-using LeSi.Admin.Contracts.User;
+using LeSi.Admin.Contracts.Models.User;
 using LeSi.Admin.Domain.Entities.User;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Repository;
 using LeSi.Admin.Shared.Utilities.Encryption;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

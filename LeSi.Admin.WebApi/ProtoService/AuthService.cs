@@ -1,5 +1,5 @@
 using Grpc.Core;
-using LeSi.Admin.Contracts.User;
+using LeSi.Admin.Contracts.Models.User;
 using MediatR;
 
 

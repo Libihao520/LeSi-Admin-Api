@@ -1,9 +1,8 @@
 using LeSi.Admin.Application.User.QueryHandlers;
-using LeSi.Admin.Contracts.Dictionary;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Dtos = LeSi.Admin.Contracts.User.Dtos;
-using Queries = LeSi.Admin.Contracts.User.Queries;
+using Dtos = LeSi.Admin.Contracts.Models.User.Dtos;
+using Queries = LeSi.Admin.Contracts.Models.User.Queries;
 
 namespace LeSi.Admin.WebApi.Controllers;
 

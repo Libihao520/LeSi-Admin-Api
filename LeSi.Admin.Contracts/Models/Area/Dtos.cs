@@ -1,4 +1,4 @@
-namespace LeSi.Admin.Contracts.Area;
+namespace LeSi.Admin.Contracts.Models.Area;
 
 public class Dtos
 {

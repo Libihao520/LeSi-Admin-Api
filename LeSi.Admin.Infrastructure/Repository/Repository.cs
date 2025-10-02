@@ -2,6 +2,7 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Repository;
 using LeSi.Admin.Infrastructure.Data.Database;
 
 namespace LeSi.Admin.Infrastructure.Repository

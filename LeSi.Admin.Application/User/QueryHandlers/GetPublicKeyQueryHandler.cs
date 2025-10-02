@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using LeSi.Admin.Contracts.Logging;
+using LeSi.Admin.Contracts.Models.User;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Repository;
 using MediatR;
-using Queries = LeSi.Admin.Contracts.User.Queries;
+using Queries = LeSi.Admin.Contracts.Models.User.Queries;
 
 namespace LeSi.Admin.Application.User.QueryHandlers;
 
-public class GetPublicKeyQueryHandler : IRequestHandler<Contracts.User.Queries.GetPublicKeyDtoQuery,
-    Contracts.User.Dtos.GetPublicKeyDto>
+public class GetPublicKeyQueryHandler : IRequestHandler<Queries.GetPublicKeyDtoQuery,
+    Dtos.GetPublicKeyDto>
 {
     private readonly IAppLogger _logger;
 
@@ -23,12 +25,12 @@ public class GetPublicKeyQueryHandler : IRequestHandler<Contracts.User.Queries.G
         _logger = logger;
     }
 
-    public async Task<Contracts.User.Dtos.GetPublicKeyDto> Handle(Queries.GetPublicKeyDtoQuery command,
+    public async Task<Dtos.GetPublicKeyDto> Handle(Queries.GetPublicKeyDtoQuery command,
         CancellationToken cancellationToken)
     {
         var keyPairResult = await _keyPairManager.GetAndMoveKeyPairAsync();
 
         var (publicKey, _) = keyPairResult.Value;
-        return new Contracts.User.Dtos.GetPublicKeyDto() { PublicKey = publicKey };
+        return new Dtos.GetPublicKeyDto() { PublicKey = publicKey };
     }
 }

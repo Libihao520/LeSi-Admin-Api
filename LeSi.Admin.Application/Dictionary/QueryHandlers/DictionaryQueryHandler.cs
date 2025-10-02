@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using LeSi.Admin.Contracts;
-using LeSi.Admin.Contracts.Dictionary;
+using LeSi.Admin.Contracts.Models.Dictionary;
 using LeSi.Admin.Domain.Entities.SystemManage;
 using LeSi.Admin.Domain.Entities.User;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Repository;
 using MediatR;
 
 namespace LeSi.Admin.Application.Dictionary.QueryHandlers;

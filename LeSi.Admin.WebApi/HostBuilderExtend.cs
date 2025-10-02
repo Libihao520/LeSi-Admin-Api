@@ -1,9 +1,10 @@
 using LeSi.Admin.Application;
 using LeSi.Admin.Application.Dictionary.QueryHandlers;
-using LeSi.Admin.Contracts.Config;
 using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Repository;
 using LeSi.Admin.Infrastructure.CaChe;
+using LeSi.Admin.Infrastructure.Config;
 using LeSi.Admin.Infrastructure.Data.Database;
 using LeSi.Admin.Infrastructure.Logging;
 using LeSi.Admin.Infrastructure.Repository;

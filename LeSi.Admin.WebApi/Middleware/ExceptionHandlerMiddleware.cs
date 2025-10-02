@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
+using LeSi.Admin.Contracts.ApiResponse;
 using LeSi.Admin.Contracts.Logging;
-using LeSi.Admin.Infrastructure.Shared;
 
 namespace LeSi.Admin.WebApi.Middleware;
 

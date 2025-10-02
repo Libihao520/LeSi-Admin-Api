@@ -62,11 +62,23 @@ public class MySqlDatabase : IDatabase
         return await DbContext.Set<T>().FirstOrDefaultAsync(predicate);
     }
 
+    /// <summary>
+    /// 获取所有数据
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public async Task<IEnumerable<T>> FindList<T>() where T : class, new()
     {
         return await DbContext.Set<T>().ToListAsync();
     }
 
+    /// <summary>
+    /// SQL查询
+    /// </summary>
+    /// <param name="strSql"></param>
+    /// <param name="dbParameter"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public async Task<IEnumerable<T>> FindList<T>(string strSql, DbParameter[] dbParameter) where T : class
     {
         var reader = await new DbHelper(DbContext).ExecuteReaderAsync(strSql, dbParameter);

@@ -1,5 +1,6 @@
-using LeSi.Admin.Contracts.Config;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Repository;
+using LeSi.Admin.Infrastructure.Config;
 using LeSi.Admin.Infrastructure.Data.Database;
 using LeSi.Admin.Shared.Enums;
 

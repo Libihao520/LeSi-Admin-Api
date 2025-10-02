@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using MediatR;
 
-namespace LeSi.Admin.Contracts.User;
+namespace LeSi.Admin.Contracts.Models.User;
 
 public class Queries
 {

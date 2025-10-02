@@ -1,6 +1,6 @@
 using LeSi.Admin.Shared.Enums;
 
-namespace LeSi.Admin.Domain.Interfaces;
+namespace LeSi.Admin.Domain.Interfaces.Repository;
 
 public interface IRepositoryFactory
 {
