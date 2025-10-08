@@ -36,7 +36,10 @@ public class Program
         builder.Services.AddGrpc();
         builder.Services.AddEndpointsApiExplorer();
         builder.Register();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "LeSi.Admin.WebApi.xml"));
+        });
 
         var app = builder.Build();
 
