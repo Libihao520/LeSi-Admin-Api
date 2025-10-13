@@ -7,6 +7,7 @@ using LeSi.Admin.Infrastructure.Config;
 using LeSi.Admin.Infrastructure.Data.Database;
 using Microsoft.Data.SqlClient;
 using MySqlConnector;
+using Npgsql;
 using Oracle.ManagedDataAccess.Client;
 
 namespace LeSi.Admin.Infrastructure.Extensions
@@ -92,6 +93,7 @@ namespace LeSi.Admin.Infrastructure.Extensions
                 "SqlServer" => new SqlParameter(),
                 "MySql" => new MySqlParameter(),
                 "Oracle" => new OracleParameter(),
+                "PostgreSql" => new NpgsqlParameter(),
                 _ => throw new Exception("数据库类型目前不支持！")
             };
         }

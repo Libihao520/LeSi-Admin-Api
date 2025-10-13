@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace LeSi.Admin.Infrastructure.Data.Database;
 
+/// <summary>
+/// 数据库帮助类（通用）
+/// </summary>
 public class DbHelper
 {
     /// <summary>

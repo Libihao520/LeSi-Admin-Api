@@ -47,6 +47,10 @@ public class RepositoryFactory: IRepositoryFactory
             case "Oracle":
                 // TODO
                 break;
+            case "PostgreSql":
+                DbHelper.DbType = DatabaseType.PostgreSql;
+                database = new PostgreSqlDatabase(category,dbConnectionString,dbTimeout);
+                break;
             default:
                 throw new Exception("未找到数据库配置");
         }
