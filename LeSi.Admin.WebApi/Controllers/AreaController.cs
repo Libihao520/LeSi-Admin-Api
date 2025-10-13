@@ -16,6 +16,11 @@ public class AreaController : ControllerBase
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// 获取行政区列表
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<List<Dtos.AreaDto>>> GetAreasAsync([FromQuery] Queries.GetAreaDtoQuery query)
     {

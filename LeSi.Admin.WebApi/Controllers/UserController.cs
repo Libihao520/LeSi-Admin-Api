@@ -17,6 +17,11 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// 获取用户公钥
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<Dtos.GetPublicKeyDto>> GetPublicKeyAsync(
         [FromQuery] Queries.GetPublicKeyDtoQuery query)
@@ -25,6 +30,11 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// 用户登录
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<Dtos.LoginDto>> Login([FromBody] Queries.LoginDtoQuery query)
     {
