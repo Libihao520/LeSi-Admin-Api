@@ -3,6 +3,9 @@ using System.Text;
 
 namespace LeSi.Admin.Shared.Utilities.Encryption;
 
+/// <summary>
+/// AES 加密工具类
+/// </summary>
 public class AesUtilities
 {
     private static byte[] _keyArray = Encoding.UTF8.GetBytes("C#ACXJAesCode@#!");
