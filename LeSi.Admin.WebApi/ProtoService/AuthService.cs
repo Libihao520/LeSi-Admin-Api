@@ -5,29 +5,37 @@ using MediatR;
 
 namespace LeSi.Admin.WebApi.ProtoService;
 
-public class AuthService : WebApi.AuthService.AuthServiceBase
+/// <summary>
+/// （gRPC）认证服务
+/// </summary>
+public class AuthService(IMediator mediator) : WebApi.AuthService.AuthServiceBase
 {
-    private readonly IMediator _mediator;
-
-    public AuthService(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
+    /// <summary>
+    /// 获取公钥
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
     public override async Task<PublicKeyResponse> GetPublicKey(
         GetPublicKeyRequest request,
         ServerCallContext context)
     {
-        var result = await _mediator.Send(new Queries.GetPublicKeyDtoQuery());
+        var result = await mediator.Send(new Queries.GetPublicKeyDtoQuery());
 
-        string _publicKeyPem = result.PublicKey;
+        string publicKeyPem = result.PublicKey;
 
         return new PublicKeyResponse
         {
-            PublicKey = _publicKeyPem
+            PublicKey = publicKeyPem
         };
     }
 
+    /// <summary>
+    /// 登录
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
     public override async Task<LoginResponse> Login(
         LoginRequest request,
         ServerCallContext context)
@@ -41,7 +49,7 @@ public class AuthService : WebApi.AuthService.AuthServiceBase
         var loginResponse = new LoginResponse();
         try
         {
-            var result = await _mediator.Send(loginDtoQuery);
+            var result = await mediator.Send(loginDtoQuery);
             loginResponse.Code = 0;
             loginResponse.Token = result.Token;
         }

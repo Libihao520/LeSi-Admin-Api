@@ -10,25 +10,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeSi.Admin.Application.User.QueryHandlers;
 
-public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.LoginDto>
+public class GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRepositoryFactory repositoryFactory)
+    : IRequestHandler<Queries.LoginDtoQuery, Dtos.LoginDto>
 {
-    private readonly ICache _cache;
-    private readonly ITokenService _tokenService;
-    private readonly IRepositoryFactory _repositoryFactory;
-
-    public GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRepositoryFactory repositoryFactory)
-    {
-        _cache = cache;
-        _tokenService = tokenService;
-        _repositoryFactory = repositoryFactory;
-    }
-
     public async Task<Dtos.LoginDto> Handle(Queries.LoginDtoQuery request, CancellationToken cancellationToken)
     {
-        var privateKey = _cache.Get<string>(request.PublicKey);
+        var privateKey = cache.Get<string>(request.PublicKey);
 
-        string decryptedUsername = string.Empty;
-        string decryptedPassword = string.Empty;
+        string decryptedUsername;
+        string decryptedPassword;
 
         // 使用私钥进行RSA解密
         try
@@ -53,7 +43,7 @@ public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.
             throw new InvalidOperationException("解密失败：私钥无效或数据格式错误", ex);
         }
 
-        var userRepository = _repositoryFactory.UserRepository();
+        var userRepository = repositoryFactory.UserRepository();
 
         var user = await userRepository.FindEntity<UsersEntity>(u => u.Name == decryptedUsername);
         if (user == null)
@@ -66,9 +56,9 @@ public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.
             throw new ArgumentException("密码错误");
         }
 
-        var token = _tokenService.GetToken(user, privateKey);
+        var token = tokenService.GetToken(user, privateKey);
 
-        _cache.Set(token, request.PublicKey, TimeSpan.FromMinutes(30));
+        cache.Set(token, request.PublicKey, TimeSpan.FromMinutes(30));
         return new Dtos.LoginDto { Token = token };
     }
 }
