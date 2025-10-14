@@ -12,24 +12,20 @@ namespace LeSi.Admin.Application.User.QueryHandlers;
 
 public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.LoginDto>
 {
-    private readonly ICache _memoryCache;
-    private readonly ICache _redisCache;
+    private readonly ICache _cache;
     private readonly ITokenService _tokenService;
     private readonly IRepositoryFactory _repositoryFactory;
 
-    public GetTokenQueryHandler([FromKeyedServices("MemoryCache")] ICache memoryCache,
-        [FromKeyedServices("RedisCache")] ICache redisCache, ITokenService tokenService,
-        IRepositoryFactory repositoryFactory)
+    public GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRepositoryFactory repositoryFactory)
     {
-        _memoryCache = memoryCache;
-        _redisCache = redisCache;
+        _cache = cache;
         _tokenService = tokenService;
         _repositoryFactory = repositoryFactory;
     }
 
     public async Task<Dtos.LoginDto> Handle(Queries.LoginDtoQuery request, CancellationToken cancellationToken)
     {
-        var privateKey = _redisCache.Get<string>(request.PublicKey);
+        var privateKey = _cache.Get<string>(request.PublicKey);
 
         string decryptedUsername = string.Empty;
         string decryptedPassword = string.Empty;
@@ -72,7 +68,7 @@ public class GetTokenQueryHandler : IRequestHandler<Queries.LoginDtoQuery, Dtos.
 
         var token = _tokenService.GetToken(user, privateKey);
 
-        _redisCache.Set(token, request.PublicKey, TimeSpan.FromMinutes(30));
+        _cache.Set(token, request.PublicKey, TimeSpan.FromMinutes(30));
         return new Dtos.LoginDto { Token = token };
     }
 }

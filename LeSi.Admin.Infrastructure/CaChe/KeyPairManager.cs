@@ -23,7 +23,7 @@ namespace LeSi.Admin.Infrastructure.Cache
         private const int CheckIntervalMinutes = 1; // 检查间隔(分钟)
         private bool _disposed = false; // 是否已释放资源
 
-        public KeyPairManager([FromKeyedServices("RedisCache")] ICache cache, IAppLogger logger)
+        public KeyPairManager( ICache cache, IAppLogger logger)
         {
             _cache = cache;
             _logger = logger;
