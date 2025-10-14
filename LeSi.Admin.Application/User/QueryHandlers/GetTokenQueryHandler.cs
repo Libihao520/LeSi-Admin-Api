@@ -45,7 +45,7 @@ public class GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRep
 
         var userRepository = repositoryFactory.UserRepository();
 
-        var user = await userRepository.FindEntity<UsersEntity>(u => u.Name == decryptedUsername);
+        var user = await userRepository.FindEntityAsync<UsersEntity>(u => u.Name == decryptedUsername);
         if (user == null)
         {
             throw new ArgumentException("用户不存在");

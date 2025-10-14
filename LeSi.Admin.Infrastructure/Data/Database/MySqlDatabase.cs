@@ -16,7 +16,7 @@ public class MySqlDatabase : IDatabase
     /// </summary>
     public DbContext DbContext { get; }
 
-    public IDbContextTransaction dbContextTransaction { get; set; }
+    public IDbContextTransaction DbContextTransaction { get; set; }
 
     public MySqlDatabase(DatabaseCategory category, string connString, int dbTimeout)
     {
@@ -29,7 +29,7 @@ public class MySqlDatabase : IDatabase
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<IDatabase> BeginTrans()
+    public async Task<IDatabase> BeginTransactionAsync()
     {
         var dbConnection = DbContext.Database.GetDbConnection();
         if (dbConnection.State == ConnectionState.Closed)
@@ -37,16 +37,16 @@ public class MySqlDatabase : IDatabase
             await dbConnection.OpenAsync();
         }
 
-        dbContextTransaction = await DbContext.Database.BeginTransactionAsync();
+        DbContextTransaction = await DbContext.Database.BeginTransactionAsync();
         return this;
     }
 
-    public Task Commit()
+    public Task CommitAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task Rollback()
+    public Task RollbackAsync()
     {
         throw new NotImplementedException();
     }
@@ -57,7 +57,7 @@ public class MySqlDatabase : IDatabase
     /// <typeparam name="T">实体类型</typeparam>
     /// <param name="predicate">查询条件</param>
     /// <returns>符合条件的单条数据，如果没有则返回null</returns>
-    public async Task<T?> FindEntity<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+    public async Task<T?> FindEntityAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
     {
         return await DbContext.Set<T>().FirstOrDefaultAsync(predicate);
     }
@@ -67,7 +67,7 @@ public class MySqlDatabase : IDatabase
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public async Task<IEnumerable<T>> FindList<T>() where T : class, new()
+    public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class, new()
     {
         return await DbContext.Set<T>().ToListAsync();
     }
@@ -79,7 +79,7 @@ public class MySqlDatabase : IDatabase
     /// <param name="dbParameter"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public async Task<IEnumerable<T>> FindList<T>(string strSql, DbParameter[] dbParameter) where T : class
+    public async Task<IEnumerable<T>> QueryAsync<T>(string strSql, DbParameter[] dbParameter) where T : class
     {
         var reader = await new DbHelper(DbContext).ExecuteReaderAsync(strSql, dbParameter);
         return DatabasesExtension.IDataReaderToList<T>(reader);

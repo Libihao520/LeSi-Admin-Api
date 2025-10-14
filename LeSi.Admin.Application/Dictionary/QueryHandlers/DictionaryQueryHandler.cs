@@ -15,7 +15,7 @@ public class DictionaryQueryHandler(IMapper mapper, IRepositoryFactory repositor
     public async Task<List<Dtos.DictionaryDto>> Handle(Queries.GetDictionaryDtoQuery command,
         CancellationToken cancellationToken)
     {
-        var dictionaryEntities = await repositoryFactory.DictionaryRepository().FindList<DictionaryEntity>();
+        var dictionaryEntities = await repositoryFactory.DictionaryRepository().GetAllAsync<DictionaryEntity>();
 
         var dictionaryDto = mapper.Map<List<Dtos.DictionaryDto>>(dictionaryEntities);
 

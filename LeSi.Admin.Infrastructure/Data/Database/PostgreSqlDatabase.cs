@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 using LeSi.Admin.Infrastructure.Data.DbContexts;
@@ -15,36 +16,43 @@ public class PostgreSqlDatabase : IDatabase
     /// </summary>
     public DbContext DbContext { get; }
 
-    public IDbContextTransaction dbContextTransaction { get; set; }
+    public IDbContextTransaction DbContextTransaction { get; set; }
 
     public PostgreSqlDatabase(DatabaseCategory category, string connString, int dbTimeout)
     {
         DbContext = new PgsqlDbContext(category, connString, dbTimeout);
     }
 
-    public Task<IDatabase> BeginTrans()
+    public async Task<IDatabase> BeginTransactionAsync()
     {
-        throw new NotImplementedException();
+        var dbConnection = DbContext.Database.GetDbConnection();
+        if (dbConnection.State == ConnectionState.Closed)
+        {
+            await dbConnection.OpenAsync();
+        }
+
+        DbContextTransaction = await DbContext.Database.BeginTransactionAsync();
+        return this;
     }
 
-    public Task Commit()
+    public async Task CommitAsync()
     {
-        throw new NotImplementedException();
+        await DbContextTransaction.CommitAsync();
     }
 
-    public Task Rollback()
+    public async Task RollbackAsync()
     {
-        throw new NotImplementedException();
+        await DbContextTransaction.RollbackAsync();
     }
 
-    public Task<T?> FindEntity<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+    public async Task<T?> FindEntityAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
     {
-        throw new NotImplementedException();
+        return await DbContext.Set<T>().FirstOrDefaultAsync(predicate);
     }
 
-    public Task<IEnumerable<T>> FindList<T>() where T : class, new()
+    public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class, new()
     {
-        throw new NotImplementedException();
+        return await DbContext.Set<T>().ToListAsync();
     }
 
     /// <summary>
@@ -54,7 +62,7 @@ public class PostgreSqlDatabase : IDatabase
     /// <param name="strSql">SQL语句</param>
     /// <param name="dbParameter">参数数组</param>
     /// <returns>符合条件的数据列表</returns>
-    public async Task<IEnumerable<T>> FindList<T>(string strSql, DbParameter[] dbParameter) where T : class
+    public async Task<IEnumerable<T>> QueryAsync<T>(string strSql, DbParameter[] dbParameter) where T : class
     {
         var reader = await new DbHelper(DbContext).ExecuteReaderAsync(strSql, dbParameter);
         return DatabasesExtension.IDataReaderToList<T>(reader);

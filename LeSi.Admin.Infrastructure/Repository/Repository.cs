@@ -10,18 +10,15 @@ namespace LeSi.Admin.Infrastructure.Repository
     /// <summary>
     /// 通用仓储基类，定义数据标准操作
     /// </summary>
-    public class Repository: IRepository
+    public class Repository(IDatabase iDatabase) : IRepository
     {
-        public IDatabase db;
-
-        public Repository(IDatabase iDatabase)
+        /// <summary>
+        /// 开启事务
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IRepository> BeginTransactionAsync()
         {
-            this.db = iDatabase;
-        }
-
-        public async Task<IRepository> BeginTrans()
-        {
-            await db.BeginTrans();
+            await iDatabase.BeginTransactionAsync();
             return this;
         }
 
@@ -31,19 +28,31 @@ namespace LeSi.Admin.Infrastructure.Repository
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="predicate">查询条件</param>
         /// <returns>符合条件的单条数据，如果没有则返回null</returns>
-        public async Task<T?> FindEntity<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        public async Task<T?> FindEntityAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            return await db.FindEntity(predicate);
+            return await iDatabase.FindEntityAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> FindList<T>() where T : class, new()
+        /// <summary>
+        /// 查询所有数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class, new()
         {
-            return await db.FindList<T>();
+            return await iDatabase.GetAllAsync<T>();
         }
 
-        public async Task<IEnumerable<T>> FindList<T>(string strSql, DbParameter[] dbParameter) where T : class
+        /// <summary>
+        /// SQL查询
+        /// </summary>
+        /// <param name="strSql"></param>
+        /// <param name="dbParameter"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> QueryAsync<T>(string strSql, DbParameter[] dbParameter) where T : class
         {
-            return await db.FindList<T>(strSql, dbParameter);
+            return await iDatabase.QueryAsync<T>(strSql, dbParameter);
         }
     }
 }

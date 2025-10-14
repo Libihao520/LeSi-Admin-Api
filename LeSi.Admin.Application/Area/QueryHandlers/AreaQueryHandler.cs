@@ -30,7 +30,7 @@ and Left(administrative_region_code::varchar, 2) = @Code";
             parameter.Add(parameterFactory.CreateParameter("@Code", request.Code));
 
             var areaList = await repositoryFactory.DictionaryRepository()
-                .FindList<Dtos.AreaDto>(sql, parameter.ToArray());
+                .QueryAsync<Dtos.AreaDto>(sql, parameter.ToArray());
             return areaList.ToList();
         }
         catch (Exception ex)
