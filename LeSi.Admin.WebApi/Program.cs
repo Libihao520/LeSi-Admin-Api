@@ -9,37 +9,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Configuration
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile(
-                $"appsettings.{(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true" ? "Docker" : "Development")}.json",
-                optional: true);
 
-        // 配置 NLog
-        builder.Logging.ClearProviders();
-        builder.Host.UseNLog();
-
-        builder.Services.AddControllers(options => { options.Filters.Add<ApiResponseFilter>(); });
-
-        builder.WebHost.ConfigureKestrel(options =>
-        {
-            // 端口1：HTTP/1.1（REST API/Swagger）
-            options.ListenAnyIP(5158, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
-
-            // 端口2：HTTP/2（gRPC）
-            options.ListenAnyIP(5159, listenOptions =>
-            {
-                listenOptions.Protocols = HttpProtocols.Http2;
-                // listenOptions.UseHttps(); // 生产环境启用 HTTPS
-            });
-        });
-        builder.Services.AddGrpc();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Register();
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "LeSi.Admin.WebApi.xml"));
-        });
+        builder.AddProgramExtensions();
 
         var app = builder.Build();
 
