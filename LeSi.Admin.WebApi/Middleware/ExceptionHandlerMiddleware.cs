@@ -5,10 +5,14 @@ using LeSi.Admin.Contracts.Logging;
 
 namespace LeSi.Admin.WebApi.Middleware;
 
+/// <summary>
+/// 全局异常处理中间件
+/// </summary>
 public class ExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IAppLogger _logger;
+
     public ExceptionHandlerMiddleware(RequestDelegate next, IAppLogger logger)
     {
         _next = next;
@@ -23,7 +27,7 @@ public class ExceptionHandlerMiddleware
         }
         catch (Exception ex)
         {
-            _logger.Error( "全局异常捕获：{ErrorMessage}", ex);
+            _logger.Error("全局异常捕获：{ErrorMessage}", ex);
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -42,4 +46,3 @@ public class ExceptionHandlerMiddleware
         return context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }
-

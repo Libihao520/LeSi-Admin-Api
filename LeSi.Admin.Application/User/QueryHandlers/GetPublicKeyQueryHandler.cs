@@ -12,10 +12,8 @@ public class GetPublicKeyQueryHandler : IRequestHandler<Queries.GetPublicKeyDtoQ
     Dtos.GetPublicKeyDto>
 {
     private readonly IAppLogger _logger;
-
     private readonly IMapper _mapper;
     private readonly IKeyPairManager _keyPairManager;
-    private readonly IRepositoryFactory _repositoryFactory;
 
     public GetPublicKeyQueryHandler(IMapper mapper,
         IKeyPairManager keyPairManager, IAppLogger logger)
@@ -29,6 +27,11 @@ public class GetPublicKeyQueryHandler : IRequestHandler<Queries.GetPublicKeyDtoQ
         CancellationToken cancellationToken)
     {
         var keyPairResult = await _keyPairManager.GetAndMoveKeyPairAsync();
+
+        if (keyPairResult == null)
+        {
+            throw new InvalidOperationException("无法生成密钥对，请稍后重试");
+        }
 
         var (publicKey, _) = keyPairResult.Value;
         return new Dtos.GetPublicKeyDto() { PublicKey = publicKey };
