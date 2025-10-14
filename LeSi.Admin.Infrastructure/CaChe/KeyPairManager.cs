@@ -7,7 +7,7 @@ using LeSi.Admin.Infrastructure.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Logging;
 
-namespace LeSi.Admin.Infrastructure.CaChe
+namespace LeSi.Admin.Infrastructure.Cache
 {
     public class KeyPairManager : IHostedService, IDisposable, IKeyPairManager
     {

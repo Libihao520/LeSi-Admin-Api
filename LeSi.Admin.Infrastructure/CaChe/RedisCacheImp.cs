@@ -5,7 +5,7 @@ using LeSi.Admin.Infrastructure.Logging;
 using Microsoft.IdentityModel.Logging;
 using StackExchange.Redis;
 
-namespace LeSi.Admin.Infrastructure.CaChe;
+namespace LeSi.Admin.Infrastructure.Cache;
 
 public class RedisCacheImp : ICache, IDisposable, IAsyncDisposable
 {

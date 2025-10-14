@@ -4,7 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using LeSi.Admin.Infrastructure.Logging;
 using Microsoft.IdentityModel.Logging;
 
-namespace LeSi.Admin.Infrastructure.CaChe;
+namespace LeSi.Admin.Infrastructure.Cache;
 
 public class MemoryCacheImp : ICache
 {
