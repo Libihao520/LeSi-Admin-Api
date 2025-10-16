@@ -6,7 +6,6 @@ public class Queries
 {
     public class GetAreaDtoQuery : MediatR.IRequest<List<Models.Area.Dtos.AreaDto>>
     {
-        [Required]
-        public string Code { get; set; } =  "44";
+        public string? Code { get; set; }
     }
 }

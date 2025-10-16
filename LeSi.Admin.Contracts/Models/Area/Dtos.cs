@@ -12,5 +12,7 @@ public class Dtos
         public string XianName { get; set; } = string.Empty;
         public string Xiang { get; set; } = string.Empty;
         public string XiangName { get; set; } = string.Empty;
+        public string Cun { get; set; } = string.Empty;
+        public string CunName { get; set; } = string.Empty;
     }
 }
