@@ -21,46 +21,35 @@ public class RedisCacheImp : ICache, IDisposable, IAsyncDisposable
         _redis = (ConnectionMultiplexer)(redis ?? throw new ArgumentNullException(nameof(redis)));
         _database = _redis.GetDatabase();
         _serializerOptions = serializerOptions ?? new JsonSerializerOptions();
-        
+
         _logger.Debug("Redis缓存实例初始化完成");
     }
 
     public T? Get<T>(string key)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            var ex = new ArgumentException("缓存键不能为空或空白", nameof(key));
-            _logger.Error("无效的缓存键", ex);
-            throw ex;
-        }
+        return GetAsync<T>(key).GetAwaiter().GetResult();
+    }
 
-        try
-        {
-            var value = _database.StringGet(key);
-            if (value.HasValue)
-            {
-                _logger.Debug($"成功获取键值 [{key}]");
-                return JsonSerializer.Deserialize<T>(value, _serializerOptions);
-            }
-            
-            _logger.Debug($"缓存中未找到键 [{key}]");
-            return default;
-        }
-        catch (Exception ex)
-        {
-            _logger.Error($"获取键 [{key}] 的值时发生错误", ex);
-            throw;
-        }
+    public bool TryGetValue<T>(string key, out T? value)
+    {
+        var result = TryGetValueAsync<T>(key).GetAwaiter().GetResult();
+        value = result.Value;
+        return result.Success;
+    }
+
+    public void Set<T>(string key, T value, TimeSpan expiration)
+    {
+        SetAsync(key, value, expiration).GetAwaiter().GetResult();
+    }
+
+    public void Remove(string key)
+    {
+        RemoveAsync(key).GetAwaiter().GetResult();
     }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            var ex = new ArgumentException("缓存键不能为空或空白", nameof(key));
-            _logger.Error("无效的缓存键", ex);
-            throw ex;
-        }
+        ValidateKey(key);
 
         try
         {
@@ -69,7 +58,7 @@ public class RedisCacheImp : ICache, IDisposable, IAsyncDisposable
             {
                 return JsonSerializer.Deserialize<T>(value, _serializerOptions);
             }
-            
+
             _logger.Debug($"缓存中未找到键 [{key}]");
             return default;
         }
@@ -80,50 +69,26 @@ public class RedisCacheImp : ICache, IDisposable, IAsyncDisposable
         }
     }
 
-    public void Set<T>(string key, T value, TimeSpan expiration)
+    public async Task<(bool Success, T? Value)> TryGetValueAsync<T>(string key,
+        CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            var ex = new ArgumentException("缓存键不能为空或空白", nameof(key));
-            _logger.Error("无效的缓存键", ex);
-            throw ex;
-        }
-
-        if (value is null)
-        {
-            var ex = new ArgumentNullException(nameof(value));
-            _logger.Error("缓存值不能为null", ex);
-            throw ex;
-        }
-
+        ValidateKey(key);
         try
         {
-            var serializedValue = JsonSerializer.Serialize(value, _serializerOptions);
-            _database.StringSet(key, serializedValue, expiration);
-            _logger.Debug($"成功设置键 [{key}]，过期时间: {expiration}，序列化后的值: {serializedValue}");
+            var value = await GetAsync<T>(key, cancellationToken);
+            return (value != null, value);
         }
-        catch (Exception ex)
+        catch
         {
-            _logger.Error($"设置键 [{key}] 的值时发生错误", ex);
-            throw;
+            return (false, default);
         }
     }
 
-    public async Task SetAsync<T>(string key, T value, TimeSpan expiration, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            var ex = new ArgumentException("缓存键不能为空或空白", nameof(key));
-            _logger.Error("无效的缓存键", ex);
-            throw ex;
-        }
 
-        if (value is null)
-        {
-            var ex = new ArgumentNullException(nameof(value));
-            _logger.Error("缓存值不能为null", ex);
-            throw ex;
-        }
+    public async Task SetAsync<T>(string key, T value, TimeSpan expiration,
+        CancellationToken cancellationToken = default)
+    {
+        ValidateKey(key);
 
         try
         {
@@ -137,6 +102,23 @@ public class RedisCacheImp : ICache, IDisposable, IAsyncDisposable
             throw;
         }
     }
+
+    public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    {
+        ValidateKey(key);
+
+        try
+        {
+            await _database.KeyDeleteAsync(key);
+            _logger.Debug($"成功删除Redis键 [{key}]");
+        }
+        catch (Exception ex)
+        {
+            _logger.Error($"删除Redis键 [{key}] 时发生错误", ex);
+            throw;
+        }
+    }
+
 
     public void Dispose()
     {
@@ -156,15 +138,22 @@ public class RedisCacheImp : ICache, IDisposable, IAsyncDisposable
     {
         try
         {
-            if (_redis != null)
-            {
-                await _redis.DisposeAsync().ConfigureAwait(false);
-                _logger.Debug("Redis缓存实例已异步释放");
-            }
+            await _redis.DisposeAsync().ConfigureAwait(false);
+            _logger.Debug("Redis缓存实例已异步释放");
         }
         catch (Exception ex)
         {
             _logger.Error("异步释放Redis缓存时发生错误", ex);
+        }
+    }
+
+    private void ValidateKey(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            var ex = new ArgumentException("缓存键不能为空或空白", nameof(key));
+            _logger.Error("无效的缓存键", ex);
+            throw ex;
         }
     }
 }
