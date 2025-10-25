@@ -73,7 +73,18 @@ public static class HostBuilderExtend
     /// <param name="builder"></param>
     private static void AddWebApiServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers(options => { options.Filters.Add<ApiResponseFilter>(); });
+        builder.Services.AddControllers()
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                // 禁用自动模型验证，让过滤器来处理
+                options.SuppressModelStateInvalidFilter = true;
+            });
+        
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<ModelValidationFilter>();
+            options.Filters.Add<ApiResponseFilter>();
+        });
 
         builder.WebHost.ConfigureKestrel(options =>
         {
