@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using LeSi.Admin.Contracts.ApiResponse;
+using LeSi.Admin.Contracts.Exceptions;
 using LeSi.Admin.Contracts.Logging;
 
 namespace LeSi.Admin.WebApi.Middleware;
@@ -35,12 +36,29 @@ public class ExceptionHandlerMiddleware
     private Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        // 根据异常类型设置不同的HTTP状态码
+        var (statusCode, message, errorCode) = ex switch
+        {
+            ValidationException validationEx =>
+                (400, validationEx.Message, validationEx.Code),
+            BusinessException businessEx =>
+                (422, businessEx.Message, businessEx.Code),
+            NotFoundException =>
+                (404, ex.Message, "NOT_FOUND"),
+            UnauthorizedException =>
+                (401, ex.Message, "UNAUTHORIZED"),
+            ForbiddenException =>
+                (403, ex.Message, "FORBIDDEN"),
+            _ =>
+                (500, "系统内部错误，请稍后重试", "INTERNAL_ERROR")
+        };
+
+        context.Response.StatusCode = statusCode;
 
         var response = new ApiResponse<object>(
             context.Response.StatusCode,
-            "系统内部错误，请稍后重试",
-            new { Error = ex.Message }
+            message,
+            new { Error = ex.Message, Code = errorCode }
         );
 
         return context.Response.WriteAsync(JsonSerializer.Serialize(response));
