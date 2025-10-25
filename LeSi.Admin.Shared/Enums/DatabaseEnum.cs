@@ -8,7 +8,8 @@ public enum DatabaseType
     SqlServer,
     MySql,
     Oracle,
-    PostgreSql
+    PostgreSql,
+    Sqlite
 }
 /// <summary>
 /// 数据库分类枚举

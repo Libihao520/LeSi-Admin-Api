@@ -51,6 +51,10 @@ public class RepositoryFactory: IRepositoryFactory
                 DbHelper.DbType = DatabaseType.PostgreSql;
                 database = new PostgreSqlDatabase(category,dbConnectionString,dbTimeout);
                 break;
+            case "Sqlite":
+                DbHelper.DbType = DatabaseType.Sqlite;
+                database = new SqLiteDatabase(category,dbConnectionString,dbTimeout);
+                break;
             default:
                 throw new Exception("未找到数据库配置");
         }

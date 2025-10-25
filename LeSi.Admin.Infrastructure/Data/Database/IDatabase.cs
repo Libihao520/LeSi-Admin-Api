@@ -29,6 +29,47 @@ public interface IDatabase
     Task RollbackAsync();
 
     /// <summary>
+    /// 新增实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="entity">实体对象</param>
+    /// <returns></returns>
+    Task<T> AddAsync<T>(T entity) where T : class, new();
+
+    /// <summary>
+    /// 批量新增实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="entities">实体集合</param>
+    /// <returns></returns>
+    Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class, new();
+
+
+    /// <summary>
+    /// 删除实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="entity">实体对象</param>
+    /// <returns></returns>
+    Task DeleteAsync<T>(T entity) where T : class, new();
+
+    /// <summary>
+    /// 根据条件删除
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="predicate">删除条件</param>
+    /// <returns></returns>
+    Task DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new();
+
+    /// <summary>
+    /// 批量删除实体
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="entities">实体集合</param>
+    /// <returns></returns>
+    Task DeleteRangeAsync<T>(IEnumerable<T> entities) where T : class, new();
+
+    /// <summary>
     /// 根据条件获取单条数据
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
@@ -51,4 +92,10 @@ public interface IDatabase
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     Task<IEnumerable<T>> QueryAsync<T>(string strSql, DbParameter[] dbParameter) where T : class;
+
+    /// <summary>
+    /// 保存更改
+    /// </summary>
+    /// <returns>影响的行数</returns>
+    Task<int> SaveChangesAsync();
 }

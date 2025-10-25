@@ -9,15 +9,15 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace LeSi.Admin.Infrastructure.Data.Database;
 
-public class MySqlDatabase : IDatabase
+public class SqLiteDatabase : IDatabase
 {
     public DbContext DbContext { get; }
 
     public IDbContextTransaction DbContextTransaction { get; set; }
 
-    public MySqlDatabase(DatabaseCategory category, string connString, int dbTimeout)
+    public SqLiteDatabase(DatabaseCategory category, string connString, int dbTimeout)
     {
-        DbContext = new MySqlDbContext(category, connString, dbTimeout);
+        DbContext = new SqliteDbContext(category, connString, dbTimeout);
     }
 
     public async Task<IDatabase> BeginTransactionAsync()
@@ -32,14 +32,14 @@ public class MySqlDatabase : IDatabase
         return this;
     }
 
-    public Task CommitAsync()
+    public async Task CommitAsync()
     {
-        throw new NotImplementedException();
+        await DbContextTransaction.CommitAsync();
     }
 
-    public Task RollbackAsync()
+    public async Task RollbackAsync()
     {
-        throw new NotImplementedException();
+        await DbContextTransaction.RollbackAsync();
     }
 
     public Task<T> AddAsync<T>(T entity) where T : class, new()

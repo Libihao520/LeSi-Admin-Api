@@ -11,9 +11,6 @@ namespace LeSi.Admin.Infrastructure.Data.Database;
 
 public class PostgreSqlDatabase : IDatabase
 {
-    /// <summary>
-    /// PostgreSQL数据库操作类
-    /// </summary>
     public DbContext DbContext { get; }
 
     public IDbContextTransaction DbContextTransaction { get; set; }
@@ -45,6 +42,31 @@ public class PostgreSqlDatabase : IDatabase
         await DbContextTransaction.RollbackAsync();
     }
 
+    public Task<T> AddAsync<T>(T entity) where T : class, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteAsync<T>(T entity) where T : class, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteRangeAsync<T>(IEnumerable<T> entities) where T : class, new()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<T?> FindEntityAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
     {
         return await DbContext.Set<T>().FirstOrDefaultAsync(predicate);
@@ -55,16 +77,14 @@ public class PostgreSqlDatabase : IDatabase
         return await DbContext.Set<T>().ToListAsync();
     }
 
-    /// <summary>
-    /// 根据SQL语句查询数据列表
-    /// </summary>
-    /// <typeparam name="T">实体类型</typeparam>
-    /// <param name="strSql">SQL语句</param>
-    /// <param name="dbParameter">参数数组</param>
-    /// <returns>符合条件的数据列表</returns>
     public async Task<IEnumerable<T>> QueryAsync<T>(string strSql, DbParameter[] dbParameter) where T : class
     {
         var reader = await new DbHelper(DbContext).ExecuteReaderAsync(strSql, dbParameter);
         return DatabasesExtension.IDataReaderToList<T>(reader);
+    }
+
+    public Task<int> SaveChangesAsync()
+    {
+        throw new NotImplementedException();
     }
 }

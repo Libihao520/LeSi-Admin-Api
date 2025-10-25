@@ -10,7 +10,7 @@ namespace LeSi.Admin.Infrastructure.Repository
     /// <summary>
     /// 通用仓储基类，定义数据标准操作
     /// </summary>
-    public class Repository(IDatabase iDatabase) : IRepository
+    public class Repository(IDatabase database) : IRepository
     {
         /// <summary>
         /// 开启事务
@@ -18,8 +18,81 @@ namespace LeSi.Admin.Infrastructure.Repository
         /// <returns></returns>
         public async Task<IRepository> BeginTransactionAsync()
         {
-            await iDatabase.BeginTransactionAsync();
+            await database.BeginTransactionAsync();
             return this;
+        }
+
+        /// <summary>
+        /// 提交事务
+        /// </summary>
+        /// <returns></returns>
+        public async Task CommitAsync()
+        {
+            await database.CommitAsync();
+        }
+
+        /// <summary>
+        /// 回滚事务
+        /// </summary>
+        /// <returns></returns>
+        public async Task RollbackAsync()
+        {
+            await database.RollbackAsync();
+        }
+
+        /// <summary>
+        /// 新增实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体对象</param>
+        /// <returns></returns>
+        public async Task<T> AddAsync<T>(T entity) where T : class, new()
+        {
+            return await database.AddAsync(entity);
+        }
+
+        /// <summary>
+        /// 批量新增实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entities">实体集合</param>
+        /// <returns></returns>
+        public async Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class, new()
+        {
+            await database.AddRangeAsync(entities);
+        }
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体对象</param>
+        /// <returns></returns>
+        public async Task DeleteAsync<T>(T entity) where T : class, new()
+        {
+            await database.DeleteAsync(entity);
+        }
+
+        /// <summary>
+        /// 根据条件删除
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="predicate">删除条件</param>
+        /// <returns></returns>
+        public async Task DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
+        {
+            await database.DeleteAsync(predicate);
+        }
+
+        /// <summary>
+        /// 批量删除实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entities">实体集合</param>
+        /// <returns></returns>
+        public async Task DeleteRangeAsync<T>(IEnumerable<T> entities) where T : class, new()
+        {
+            await database.DeleteRangeAsync(entities);
         }
 
         /// <summary>
@@ -30,7 +103,7 @@ namespace LeSi.Admin.Infrastructure.Repository
         /// <returns>符合条件的单条数据，如果没有则返回null</returns>
         public async Task<T?> FindEntityAsync<T>(Expression<Func<T, bool>> predicate) where T : class, new()
         {
-            return await iDatabase.FindEntityAsync(predicate);
+            return await database.FindEntityAsync(predicate);
         }
 
         /// <summary>
@@ -40,7 +113,7 @@ namespace LeSi.Admin.Infrastructure.Repository
         /// <returns></returns>
         public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class, new()
         {
-            return await iDatabase.GetAllAsync<T>();
+            return await database.GetAllAsync<T>();
         }
 
         /// <summary>
@@ -52,7 +125,16 @@ namespace LeSi.Admin.Infrastructure.Repository
         /// <returns></returns>
         public async Task<IEnumerable<T>> QueryAsync<T>(string strSql, DbParameter[] dbParameter) where T : class
         {
-            return await iDatabase.QueryAsync<T>(strSql, dbParameter);
+            return await database.QueryAsync<T>(strSql, dbParameter);
+        }
+
+        /// <summary>
+        /// 保存更改
+        /// </summary>
+        /// <returns>影响的行数</returns>
+        public async Task<int> SaveChangesAsync()
+        {
+            return await database.SaveChangesAsync();
         }
     }
 }
