@@ -33,8 +33,7 @@ public class AesUtilities
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return "???";
+            return content;
         }
     }
 
@@ -64,8 +63,7 @@ public class AesUtilities
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            return "???";
+            return content;
         }
     }
 }
