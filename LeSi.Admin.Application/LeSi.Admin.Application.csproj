@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Area\CommandHandlers\" />
     <Folder Include="Dictionary\CommandHandlers\" />
-    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

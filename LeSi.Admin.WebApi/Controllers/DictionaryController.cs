@@ -23,7 +23,7 @@ public class DictionaryController : ControllerBase
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<List<Dtos.DictionaryDto>>> GetAllAsync([FromQuery] Queries.GetDictionaryDtoQuery query)
+    public async Task<ActionResult<List<Dtos.DictionaryDto>>> GetAllAsync([FromQuery] Queries.GetDictionaryQuery query)
     {
         var result = await _mediator.Send(query);
         return Ok(result);
