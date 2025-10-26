@@ -4,10 +4,10 @@ namespace LeSi.Admin.Contracts.Models.User;
 
 public class Queries
 {
-    public class GetPublicKeyDtoQuery : MediatR.IRequest<Dtos.GetPublicKeyDto>
+    public class GetPublicKeyQuery : MediatR.IRequest<Dtos.GetPublicKeyDto>
     {
     }
-    public class LoginDtoQuery : MediatR.IRequest<Dtos.LoginDto>
+    public class LoginQuery : MediatR.IRequest<Dtos.LoginDto>
     {
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; } = string.Empty;

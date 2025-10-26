@@ -10,9 +10,9 @@ using MediatR;
 namespace LeSi.Admin.Application.Dictionary.QueryHandlers;
 
 public class DictionaryQueryHandler(IMapper mapper, IRepositoryFactory repositoryFactory)
-    : IRequestHandler<Queries.GetDictionaryDtoQuery, List<Dtos.DictionaryDto>>
+    : IRequestHandler<Queries.GetDictionaryQuery, List<Dtos.DictionaryDto>>
 {
-    public async Task<List<Dtos.DictionaryDto>> Handle(Queries.GetDictionaryDtoQuery command,
+    public async Task<List<Dtos.DictionaryDto>> Handle(Queries.GetDictionaryQuery command,
         CancellationToken cancellationToken)
     {
         var dictionaryEntities = await repositoryFactory.DictionaryRepository().GetAllAsync<DictionaryEntity>();

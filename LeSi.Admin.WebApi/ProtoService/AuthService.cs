@@ -20,7 +20,7 @@ public class AuthService(IMediator mediator) : WebApi.AuthService.AuthServiceBas
         GetPublicKeyRequest request,
         ServerCallContext context)
     {
-        var result = await mediator.Send(new Queries.GetPublicKeyDtoQuery());
+        var result = await mediator.Send(new Queries.GetPublicKeyQuery());
 
         string publicKeyPem = result.PublicKey;
 
@@ -40,7 +40,7 @@ public class AuthService(IMediator mediator) : WebApi.AuthService.AuthServiceBas
         LoginRequest request,
         ServerCallContext context)
     {
-        var loginDtoQuery = new Queries.LoginDtoQuery()
+        var loginDtoQuery = new Queries.LoginQuery()
         {
             Username = request.Username,
             Password = request.Password,

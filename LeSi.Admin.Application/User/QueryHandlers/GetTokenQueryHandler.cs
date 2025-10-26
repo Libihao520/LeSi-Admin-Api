@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace LeSi.Admin.Application.User.QueryHandlers;
 
 public class GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRepositoryFactory repositoryFactory)
-    : IRequestHandler<Queries.LoginDtoQuery, Dtos.LoginDto>
+    : IRequestHandler<Queries.LoginQuery, Dtos.LoginDto>
 {
-    public async Task<Dtos.LoginDto> Handle(Queries.LoginDtoQuery request, CancellationToken cancellationToken)
+    public async Task<Dtos.LoginDto> Handle(Queries.LoginQuery request, CancellationToken cancellationToken)
     {
         var privateKey = cache.Get<string>(request.PublicKey);
 

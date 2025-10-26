@@ -9,9 +9,9 @@ using Queries = LeSi.Admin.Contracts.Models.User.Queries;
 namespace LeSi.Admin.Application.User.QueryHandlers;
 
 public class GetPublicKeyQueryHandler(IMapper mapper, IKeyPairManager keyPairManager, IAppLogger logger)
-    : IRequestHandler<Queries.GetPublicKeyDtoQuery, Dtos.GetPublicKeyDto>
+    : IRequestHandler<Queries.GetPublicKeyQuery, Dtos.GetPublicKeyDto>
 {
-    public async Task<Dtos.GetPublicKeyDto> Handle(Queries.GetPublicKeyDtoQuery command,
+    public async Task<Dtos.GetPublicKeyDto> Handle(Queries.GetPublicKeyQuery command,
         CancellationToken cancellationToken)
     {
         var keyPairResult = await keyPairManager.GetAndMoveKeyPairAsync();

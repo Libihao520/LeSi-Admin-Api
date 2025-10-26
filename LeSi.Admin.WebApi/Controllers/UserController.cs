@@ -34,7 +34,7 @@ public class UserController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<Dtos.GetPublicKeyDto>> GetPublicKeyAsync(
-        [FromQuery] Queries.GetPublicKeyDtoQuery query)
+        [FromQuery] Queries.GetPublicKeyQuery query)
     {
         if (IsRequestTooFrequent())
         {
@@ -51,7 +51,7 @@ public class UserController : ControllerBase
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<ActionResult<Dtos.LoginDto>> Login([FromBody] Queries.LoginDtoQuery query)
+    public async Task<ActionResult<Dtos.LoginDto>> Login([FromBody] Queries.LoginQuery query)
     {
         var result = await _mediator.Send(query);
         return Ok(result);
