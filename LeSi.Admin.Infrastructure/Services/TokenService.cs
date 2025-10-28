@@ -3,21 +3,22 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using LeSi.Admin.Domain.Entities.User;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Infrastructure.Config;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LeSi.Admin.Infrastructure.Services;
 
 public class TokenService : ITokenService
 {
+    private readonly string _issuer = GlobalContext.SystemConfig.Authentication.Issuer;
+    private readonly string _audience = GlobalContext.SystemConfig.Authentication.Audience;
+
     public string GetToken(UsersEntity user, string privateKey)
     {
         using var rsa = RSA.Create();
         rsa.ImportFromPem(privateKey);
 
-        // TODO 后面改成URL
-        var issuer = "LeSi.Admin";
-        var audience = "LeSi.Client";
-        var expires = DateTime.Now.AddDays(2); // 2天有效期
+        var expires = DateTime.Now.AddSeconds(GlobalContext.SystemConfig.Authentication.AccessTokenExpiration);
 
         var credentials = new SigningCredentials(
             new RsaSecurityKey(rsa),
@@ -33,17 +34,52 @@ public class TokenService : ITokenService
             new Claim(ClaimTypes.Role, user.Role.ToString()),
             new Claim("Name", user.Name),
             new Claim("RoleName", user.Role.ToString()),
-
         };
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: _issuer,
+            audience: _audience,
             claims: claims,
             expires: expires,
             signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    /// <summary>
+    /// 验证Token
+    /// </summary>
+    /// <param name="token"></param>
+    /// <param name="publicKey"></param>
+    /// <returns></returns>
+    public ClaimsPrincipal ValidateToken(string token, string publicKey)
+    {
+        using var rsa = RSA.Create();
+        rsa.ImportFromPem(publicKey);
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new RsaSecurityKey(rsa),
+            ValidateIssuer = true,
+            ValidIssuer = _issuer,
+            ValidateAudience = true,
+            ValidAudience = _audience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        try
+        {
+            var principal =
+                tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+            return principal;
+        }
+        catch (Exception ex)
+        {
+            throw new SecurityTokenException("Token validation failed", ex);
+        }
     }
 }

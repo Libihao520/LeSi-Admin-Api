@@ -21,6 +21,11 @@ public class SystemConfig
     /// 缓存提供者
     /// </summary>
     public string RedisConnectionString { get; set; } = null!;
+
+    /// <summary>
+    /// 认证配置
+    /// </summary>
+    public Authentication Authentication { get; set; } = null!;
 }
 
 /// <summary>
@@ -53,4 +58,11 @@ public class UserDbConfig
     /// 数据库命令超时时间，单位秒
     /// </summary>
     public int DbCommandTimeout { get; set; }
+}
+
+public class Authentication
+{
+    public string Issuer { get; set; } = null!;
+    public string Audience { get; set; } = null!;
+    public int AccessTokenExpiration { get; set; }
 }
