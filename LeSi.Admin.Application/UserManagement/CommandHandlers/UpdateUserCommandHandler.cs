@@ -61,7 +61,7 @@ public class UpdateUserCommandHandler(IMapper mapper, IRepositoryFactory reposit
                 throw new ValidationException("密码格式错误", "PASSWORD_INVALID", nameof(request.PassWord));
             }
 
-            existingUser.PassWord = AesUtilities.Encrypt(request.PassWord); // 假设密码也需要加密存储
+            existingUser.PassWord = Md5Utilities.GetMd5Hash(request.PassWord);
         }
 
         await userRepository.SaveChangesAsync();
