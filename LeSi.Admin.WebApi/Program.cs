@@ -1,3 +1,5 @@
+using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Infrastructure.Services;
 using LeSi.Admin.WebApi.Filter;
 using LeSi.Admin.WebApi.Middleware;
 using LeSi.Admin.WebApi;
@@ -13,6 +15,10 @@ public class Program
         builder.AddProgramExtensions();
 
         var app = builder.Build();
+        
+        // 初始化 KeyResolverService
+        var cache = app.Services.GetRequiredService<ICache>();
+        KeyResolverService.Initialize(cache);
 
         app.UseMiddleware<ExceptionHandlerMiddleware>();
         app.MapControllers();

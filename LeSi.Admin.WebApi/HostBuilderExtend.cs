@@ -197,4 +197,33 @@ public static class HostBuilderExtend
         builder.Services.AddScoped<IDatabaseParameterFactory, DatabaseParameterFactory>();
         builder.Services.AddScoped<IRepositoryFactory, RepositoryFactory>();
     }
+
+    /// <summary>
+    /// 认证
+    /// </summary>
+    /// <param name="builder"></param>
+    public static void AddAuthentication(this WebApplicationBuilder builder)
+    {
+        var authentication = GlobalContext.SystemConfig.Authentication;
+        
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience =  authentication.Audience,
+                    ValidIssuer = authentication.Issuer,
+                    IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                    {
+                        var publicKey = KeyResolverService.GetPublicKeyFromDynamicSource(token);
+                        return new[] { new RsaSecurityKey(publicKey) };
+                    }
+                };
+                
+            });
+    }
 }
