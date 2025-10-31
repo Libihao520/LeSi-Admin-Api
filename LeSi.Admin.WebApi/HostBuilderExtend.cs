@@ -9,7 +9,9 @@ using LeSi.Admin.Infrastructure.Logging;
 using LeSi.Admin.Infrastructure.Repository;
 using LeSi.Admin.Infrastructure.Services;
 using LeSi.Admin.WebApi.Filter;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using StackExchange.Redis;
 

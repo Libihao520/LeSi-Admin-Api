@@ -3,10 +3,14 @@ namespace LeSi.Admin.Contracts.ApiResponse;
 public class ApiResponse<T>
 {
     public int Code { get; set; }
-    public string Message { get; set; }
+    public string? Message { get; set; }
     public T? Data { get; set; }
     public bool Success => Code == 200;
     public object? Errors { get; set; }
+
+    public ApiResponse()
+    {
+    }
 
     // 成功响应
     public ApiResponse(T? data, string message = "操作成功")
