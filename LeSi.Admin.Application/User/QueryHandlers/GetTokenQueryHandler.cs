@@ -15,7 +15,7 @@ public class GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRep
 {
     public async Task<Dtos.LoginDto> Handle(Queries.LoginQuery request, CancellationToken cancellationToken)
     {
-        var privateKey = cache.Get<string>(request.PublicKey);
+        var privateKey = await cache.GetAsync<string>(request.PublicKey, cancellationToken);
 
         string decryptedUsername;
         string decryptedPassword;
@@ -51,7 +51,7 @@ public class GetTokenQueryHandler(ICache cache, ITokenService tokenService, IRep
             throw new ArgumentException("用户不存在");
         }
 
-        if (user.PassWord != AesUtilities.Encrypt(decryptedPassword))
+        if (user.PassWord != Md5Utilities.GetMd5Hash(decryptedPassword))
         {
             throw new ArgumentException("密码错误");
         }
