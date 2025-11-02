@@ -1,4 +1,5 @@
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.User;
 using Microsoft.AspNetCore.Http;
 
 namespace LeSi.Admin.Infrastructure.Services;

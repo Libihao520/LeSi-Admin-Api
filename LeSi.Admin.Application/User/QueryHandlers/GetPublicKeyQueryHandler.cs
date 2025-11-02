@@ -2,7 +2,7 @@
 using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Contracts.Models.User;
 using LeSi.Admin.Domain.Interfaces;
-using LeSi.Admin.Domain.Interfaces.Repository;
+using LeSi.Admin.Domain.Interfaces.Security;
 using MediatR;
 using Queries = LeSi.Admin.Contracts.Models.User.Queries;
 

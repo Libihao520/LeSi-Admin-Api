@@ -1,6 +1,7 @@
 using System.Text.Json;
 using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Cache;
 using LeSi.Admin.Infrastructure.Logging;
 using Microsoft.IdentityModel.Logging;
 using StackExchange.Redis;

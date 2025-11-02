@@ -1,5 +1,6 @@
 using System.Data.Common;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Database;
 using LeSi.Admin.Infrastructure.Extensions;
 
 namespace LeSi.Admin.Infrastructure.Data.Database;

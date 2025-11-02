@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Cache;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LeSi.Admin.Infrastructure.Services;

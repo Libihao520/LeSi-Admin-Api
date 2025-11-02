@@ -1,5 +1,6 @@
 using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Cache;
 using Microsoft.Extensions.Caching.Memory;
 using LeSi.Admin.Infrastructure.Logging;
 using Microsoft.IdentityModel.Logging;

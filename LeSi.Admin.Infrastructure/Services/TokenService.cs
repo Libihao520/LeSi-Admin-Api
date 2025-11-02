@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using LeSi.Admin.Domain.Entities.User;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.User;
 using LeSi.Admin.Infrastructure.Config;
 using Microsoft.IdentityModel.Tokens;
 

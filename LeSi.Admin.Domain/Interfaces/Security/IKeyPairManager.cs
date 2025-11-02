@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace LeSi.Admin.Domain.Interfaces
+namespace LeSi.Admin.Domain.Interfaces.Security
 {
     public interface IKeyPairManager : IHostedService, IDisposable
     {

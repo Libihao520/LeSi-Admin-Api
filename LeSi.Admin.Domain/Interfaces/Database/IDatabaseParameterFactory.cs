@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-namespace LeSi.Admin.Domain.Interfaces;
+namespace LeSi.Admin.Domain.Interfaces.Database;
 
 public interface IDatabaseParameterFactory
 {

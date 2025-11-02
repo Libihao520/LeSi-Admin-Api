@@ -1,4 +1,5 @@
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Cache;
 using LeSi.Admin.Infrastructure.Services;
 using LeSi.Admin.WebApi.Filter;
 using LeSi.Admin.WebApi.Middleware;

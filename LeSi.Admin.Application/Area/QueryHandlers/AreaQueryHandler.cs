@@ -2,7 +2,8 @@ using System.Data.Common;
 using LeSi.Admin.Contracts.Logging;
 using LeSi.Admin.Contracts.Models.Area;
 using LeSi.Admin.Domain.Interfaces;
-using LeSi.Admin.Domain.Interfaces.Repository;
+using LeSi.Admin.Domain.Interfaces.Database;
+using LeSi.Admin.Domain.Interfaces.Database.Repository;
 using MediatR;
 using Microsoft.IdentityModel.Logging;
 

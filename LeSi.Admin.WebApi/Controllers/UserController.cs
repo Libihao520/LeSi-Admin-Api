@@ -1,5 +1,6 @@
 using LeSi.Admin.Application.User.QueryHandlers;
 using LeSi.Admin.Domain.Interfaces;
+using LeSi.Admin.Domain.Interfaces.Cache;
 using LeSi.Admin.Infrastructure.Cache;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

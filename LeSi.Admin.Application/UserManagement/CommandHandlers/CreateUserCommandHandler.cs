@@ -2,7 +2,7 @@ using AutoMapper;
 using LeSi.Admin.Contracts.Exceptions;
 using LeSi.Admin.Contracts.Models.UserManagement;
 using LeSi.Admin.Domain.Entities.User;
-using LeSi.Admin.Domain.Interfaces.Repository;
+using LeSi.Admin.Domain.Interfaces.Database.Repository;
 using LeSi.Admin.Shared.Utilities.Encryption;
 using LeSi.Admin.Shared.Utilities.Validation;
 using MediatR;

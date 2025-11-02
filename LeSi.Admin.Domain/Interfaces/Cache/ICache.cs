@@ -1,4 +1,4 @@
-namespace LeSi.Admin.Domain.Interfaces;
+namespace LeSi.Admin.Domain.Interfaces.Cache;
 
 public interface ICache
 {

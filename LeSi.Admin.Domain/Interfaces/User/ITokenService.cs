@@ -1,6 +1,6 @@
 using LeSi.Admin.Domain.Entities.User;
 
-namespace LeSi.Admin.Domain.Interfaces;
+namespace LeSi.Admin.Domain.Interfaces.User;
 
 public interface ITokenService
 {

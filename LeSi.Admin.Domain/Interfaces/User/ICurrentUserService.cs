@@ -1,4 +1,4 @@
-namespace LeSi.Admin.Domain.Interfaces;
+namespace LeSi.Admin.Domain.Interfaces.User;
 
 public interface ICurrentUserService
 {
