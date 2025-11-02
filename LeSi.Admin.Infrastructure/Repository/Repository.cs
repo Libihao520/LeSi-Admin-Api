@@ -1,16 +1,19 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LeSi.Admin.Domain.Entities;
 using LeSi.Admin.Domain.Interfaces;
 using LeSi.Admin.Domain.Interfaces.Repository;
 using LeSi.Admin.Infrastructure.Data.Database;
+using LeSi.Admin.Shared.Utilities.RandomId;
+using Microsoft.AspNetCore.Http;
 
 namespace LeSi.Admin.Infrastructure.Repository
 {
     /// <summary>
     /// 通用仓储基类，定义数据标准操作
     /// </summary>
-    public class Repository(IDatabase database) : IRepository
+    public class Repository(IDatabase database, ICurrentUserService currentUserService) : IRepository
     {
         /// <summary>
         /// 开启事务
@@ -48,6 +51,18 @@ namespace LeSi.Admin.Infrastructure.Repository
         /// <returns></returns>
         public async Task<T> AddAsync<T>(T entity) where T : class, new()
         {
+            if (entity is AuditableBaseEntity auditableBase)
+            {
+                auditableBase.CreateDate = DateTime.UtcNow;
+                auditableBase.IsDeleted = 0;
+                auditableBase.CreateUserId = currentUserService.UserId;
+            }
+
+            if (entity is BaseEntity baseEntity)
+            {
+                baseEntity.Id = TimeBasedIdGeneratorUtil.GenerateId();
+            }
+
             return await database.AddAsync(entity);
         }
 

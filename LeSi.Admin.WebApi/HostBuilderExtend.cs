@@ -222,6 +222,7 @@ public static class HostBuilderExtend
         builder.Services.AddTransient<ITokenService, TokenService>();
         builder.Services.AddScoped<IDatabaseParameterFactory, DatabaseParameterFactory>();
         builder.Services.AddScoped<IRepositoryFactory, RepositoryFactory>();
+        builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
     }
 
     /// <summary>

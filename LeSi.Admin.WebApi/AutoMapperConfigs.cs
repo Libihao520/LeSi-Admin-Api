@@ -21,7 +21,11 @@ public class AutoMapperConfigs : Profile
         #region Entity to DTO
 
         // 用户实体映射到DTO
-        CreateMap<UsersEntity, UserManagement.Dtos.UserDto>();
+        CreateMap<UsersEntity, UserManagement.Dtos.UserDto>()
+            .AfterMap((src, dest) =>
+            {
+                dest.Email = AesUtilities.Decrypt(src.Email);
+            });
 
         // Dictionary实体映射到DTO
         CreateMap<DictionaryEntity, Dictionary.Dtos.DictionaryDto>();

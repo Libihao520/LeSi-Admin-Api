@@ -3,10 +3,11 @@ using LeSi.Admin.Domain.Interfaces.Repository;
 using LeSi.Admin.Infrastructure.Config;
 using LeSi.Admin.Infrastructure.Data.Database;
 using LeSi.Admin.Shared.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace LeSi.Admin.Infrastructure.Repository;
 
-public class RepositoryFactory: IRepositoryFactory
+public class RepositoryFactory(ICurrentUserService currentUserService) : IRepositoryFactory
 {
     /// <summary>
     /// 根据数据库分类获取对应的 Repository 实例
@@ -42,24 +43,24 @@ public class RepositoryFactory: IRepositoryFactory
                 break;
             case "MySql":
                 DbHelper.DbType = DatabaseType.MySql;
-                database = new MySqlDatabase(category,dbConnectionString,dbTimeout);
+                database = new MySqlDatabase(category, dbConnectionString, dbTimeout);
                 break;
             case "Oracle":
                 // TODO
                 break;
             case "PostgreSql":
                 DbHelper.DbType = DatabaseType.PostgreSql;
-                database = new PostgreSqlDatabase(category,dbConnectionString,dbTimeout);
+                database = new PostgreSqlDatabase(category, dbConnectionString, dbTimeout);
                 break;
             case "Sqlite":
                 DbHelper.DbType = DatabaseType.Sqlite;
-                database = new SqLiteDatabase(category,dbConnectionString,dbTimeout);
+                database = new SqLiteDatabase(category, dbConnectionString, dbTimeout);
                 break;
             default:
                 throw new Exception("未找到数据库配置");
         }
 
-        return new Repository(database);
+        return new Repository(database,currentUserService);
     }
 
     /// <summary>
