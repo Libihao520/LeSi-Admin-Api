@@ -1,5 +1,6 @@
 using LeSi.Admin.Domain.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Dtos = LeSi.Admin.Contracts.Models.UserManagement.Dtos;
 using Queries = LeSi.Admin.Contracts.Models.UserManagement.Queries;
@@ -10,6 +11,7 @@ namespace LeSi.Admin.WebApi.Controllers;
 /// <inheritdoc />
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UserManagementController : ControllerBase
 {
     private readonly IMediator _mediator;

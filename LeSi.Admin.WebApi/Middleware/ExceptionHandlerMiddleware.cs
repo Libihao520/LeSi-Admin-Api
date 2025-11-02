@@ -49,6 +49,8 @@ public class ExceptionHandlerMiddleware
                 (401, ex.Message, "UNAUTHORIZED"),
             ForbiddenException =>
                 (403, ex.Message, "FORBIDDEN"),
+            InvalidOperationException invalidOpEx when IsAuthenticationConfigurationError(invalidOpEx) =>
+                (503, "认证服务失败", "AUTH_SERVICE_UNAVAILABLE"),
             _ =>
                 (500, "系统内部错误，请稍后重试", "INTERNAL_ERROR")
         };
@@ -62,5 +64,26 @@ public class ExceptionHandlerMiddleware
         );
 
         return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+    }
+
+    /// <summary>
+    /// 判断是否为认证配置异常
+    /// </summary>
+    /// <param name="ex"></param>
+    /// <returns></returns>
+    private static bool IsAuthenticationConfigurationError(InvalidOperationException ex)
+    {
+        var errorMessages = new[]
+        {
+            "authenticationScheme",
+            "DefaultChallengeScheme",
+            "AddAuthentication",
+            "No authenticationScheme",
+            "AuthorizationMiddleware",
+            "AuthenticationMiddleware"
+        };
+
+        return errorMessages.Any(keyword =>
+            ex.Message.Contains(keyword, StringComparison.OrdinalIgnoreCase));
     }
 }
