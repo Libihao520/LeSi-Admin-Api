@@ -1,7 +1,9 @@
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LeSi.Admin.Contracts.Models.UserManagement;
 using LeSi.Admin.Domain.Entities;
+using LeSi.Admin.Domain.Entities.User;
 using LeSi.Admin.Domain.Interfaces;
 using LeSi.Admin.Domain.Interfaces.Database.Repository;
 using LeSi.Admin.Domain.Interfaces.User;
@@ -76,6 +78,23 @@ namespace LeSi.Admin.Infrastructure.Repository
         public async Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class, new()
         {
             await database.AddRangeAsync(entities);
+        }
+
+        /// <summary>
+        /// 更新实体（仅更新可审计字段）
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="entity">实体对象</param>
+        /// <returns></returns>
+        public async Task<T> UpdateAsync<T>(T entity) where T : class, new()
+        {
+            if (entity is AuditableBaseEntity auditableBase)
+            {
+                auditableBase.LastModifiedDate = DateTime.UtcNow;
+                auditableBase.LastModifiedUserId = currentUserService.UserId;
+            }
+
+            return entity;
         }
 
         /// <summary>

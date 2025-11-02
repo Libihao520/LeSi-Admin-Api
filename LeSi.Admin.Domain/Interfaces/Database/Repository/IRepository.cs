@@ -40,6 +40,15 @@ public interface IRepository
     /// <returns></returns>
     Task AddRangeAsync<T>(IEnumerable<T> entities) where T : class, new();
 
+
+    /// <summary>
+    /// 更新实体（仅更新可审计字段）
+    /// </summary>
+    /// <typeparam name="T">实体类型</typeparam>
+    /// <param name="entity">实体对象</param>
+    /// <returns></returns>
+    Task<T> UpdateAsync<T>(T entity) where T : class, new();
+
     /// <summary>
     /// 删除实体
     /// </summary>

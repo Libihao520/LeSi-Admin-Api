@@ -64,6 +64,7 @@ public class UpdateUserCommandHandler(IMapper mapper, IRepositoryFactory reposit
             existingUser.PassWord = Md5Utilities.GetMd5Hash(request.PassWord);
         }
 
+        await userRepository.UpdateAsync(existingUser);
         await userRepository.SaveChangesAsync();
     }
 }
