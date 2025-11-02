@@ -12,6 +12,7 @@ using LeSi.Admin.WebApi.Filter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NLog.Web;
 using StackExchange.Redis;
 
@@ -39,6 +40,7 @@ public static class HostBuilderExtend
         builder.AddWebApiServices(); // Web API 服务
         builder.AddGrpcServices(); // gRPC 服务
         builder.AddSwaggerServices(); // Swagger 文档
+        builder.AddAuthentication(); // 注册认证服务
     }
 
     /// <summary>
@@ -122,10 +124,32 @@ public static class HostBuilderExtend
         builder.Services.AddSwaggerGen(options =>
         {
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "LeSi.Admin.WebApi.xml"));
+            
+            // 添加 JWT Bearer 认证配置
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Description = "请输入token格式为Bearer xxxxxx(中间必须有空格)",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
 
-            // 可以在这里添加更多的 Swagger 配置
-            // options.SwaggerDoc("v1", new OpenApiInfo { Title = "Admin API", Version = "v1" });
-            // 添加 JWT 认证支持等
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = $"LeSi Admin API", Version = "v1" });
         });
     }
 
