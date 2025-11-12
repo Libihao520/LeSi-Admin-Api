@@ -1,7 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using LeSi.Admin.Domain.Attributes;
-using LeSi.Admin.Infrastructure.Data.Database;
 using LeSi.Admin.Infrastructure.Data.Interceptors;
 using LeSi.Admin.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace LeSi.Admin.Infrastructure.Data.DbContexts;
 
-public class SqlServerDbContext : DbContext
+public class OracleDbContext : DbContext
 {
     private string ConnectionString { get; set; }
 
@@ -17,7 +16,7 @@ public class SqlServerDbContext : DbContext
 
     private DatabaseCategory Category { get; set; }
 
-    public SqlServerDbContext(DatabaseCategory category, string connectionString, int commandTimeout)
+    public OracleDbContext(DatabaseCategory category, string connectionString, int commandTimeout)
     {
         Category = category;
         ConnectionString = connectionString;
@@ -26,14 +25,11 @@ public class SqlServerDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(ConnectionString, options =>
+        optionsBuilder.UseOracle(ConnectionString, options =>
         {
             options.CommandTimeout(CommandTimeout);
-            // SQL Server 重试机制
-            options.EnableRetryOnFailure(
-                maxRetryCount: 3,
-                maxRetryDelay: TimeSpan.FromSeconds(5),
-                errorNumbersToAdd: null);
+            // Oracle 特定配置
+            options.UseOracleSQLCompatibility("11"); // 根据实际Oracle版本调整
         });
         optionsBuilder.AddInterceptors(new DbCommandCustomInterceptor());
     }
@@ -45,7 +41,7 @@ public class SqlServerDbContext : DbContext
         IEnumerable<Type> typesToRegister = entityAssembly.GetTypes().Where(p => !string.IsNullOrEmpty(p.Namespace))
             .Where(t => t.GetCustomAttribute<DatabaseAttribute>()?.DatabaseName == targetDatabaseName)
             .Where(p => !string.IsNullOrEmpty(p.GetCustomAttribute<TableAttribute>()?.Name));
-        
+
         foreach (Type type in typesToRegister)
         {
             modelBuilder.Model.AddEntityType(type);
@@ -56,7 +52,7 @@ public class SqlServerDbContext : DbContext
             string currentTableName = modelBuilder.Entity(entity.Name).Metadata.GetTableName();
             modelBuilder.Entity(entity.Name).ToTable(currentTableName);
 
-            // SQL Server 列名约定
+            // Oracle 列名约定 - 默认转换为大写
             if (Category == DatabaseCategory.Dictionary)
             {
                 var properties = entity.GetProperties();
@@ -66,42 +62,70 @@ public class SqlServerDbContext : DbContext
                 }
             }
 
-            // SQL Server 特定的配置
-            ConfigureSqlServerSpecificEntities(modelBuilder, entity);
+            // Oracle 特定的配置
+            ConfigureOracleSpecificEntities(modelBuilder, entity);
         }
 
         base.OnModelCreating(modelBuilder);
     }
 
     /// <summary>
-    /// SQL Server 特定的实体配置
+    /// Oracle 特定的实体配置
     /// </summary>
-    private void ConfigureSqlServerSpecificEntities(ModelBuilder modelBuilder, IMutableEntityType entity)
+    private void ConfigureOracleSpecificEntities(ModelBuilder modelBuilder, IMutableEntityType entity)
     {
-        // 配置自增主键
+        // Oracle 表名和列名默认大写
+        var tableName = modelBuilder.Entity(entity.Name).Metadata.GetTableName();
+        if (!string.IsNullOrEmpty(tableName))
+        {
+            modelBuilder.Entity(entity.Name).ToTable(tableName.ToUpper());
+        }
+
+        // 配置序列用于自增主键
         var primaryKey = entity.FindPrimaryKey();
         if (primaryKey?.Properties.Count == 1)
         {
             var property = primaryKey.Properties[0];
             if (property.ClrType == typeof(int) || property.ClrType == typeof(long))
             {
+                var sequenceName = $"{tableName}_SEQ";
                 modelBuilder.Entity(entity.Name)
                     .Property(property.Name)
                     .ValueGeneratedOnAdd()
-                    .UseIdentityColumn(); // SQL Server 自增列
+                    .UseOracleIdentityColumn(); // Oracle 12c+ 自增列
+
+                // 对于旧版本Oracle，可以使用序列
+                // .HasDefaultValueSql($"{sequenceName}.NEXTVAL");
             }
         }
 
-        // 配置默认架构
-        var tableAttribute = entity.ClrType.GetCustomAttribute<TableAttribute>();
-        if (tableAttribute?.Schema != null)
+        // 配置Oracle数据类型映射
+        var properties = entity.GetProperties();
+        foreach (var property in properties)
         {
-            modelBuilder.Entity(entity.Name).ToTable(tableAttribute.Name, tableAttribute.Schema);
-        }
-        else
-        {
-            // 默认使用 dbo 架构
-            modelBuilder.Entity(entity.Name).ToTable(modelBuilder.Entity(entity.Name).Metadata.GetTableName(), "dbo");
+            var clrType = property.ClrType;
+            if (clrType == typeof(string))
+            {
+                // 字符串类型配置
+                modelBuilder.Entity(entity.Name)
+                    .Property(property.Name)
+                    .HasColumnType("VARCHAR2")
+                    .HasMaxLength(4000); // Oracle VARCHAR2 最大长度
+            }
+            else if (clrType == typeof(decimal) || clrType == typeof(decimal?))
+            {
+                // 十进制类型配置
+                modelBuilder.Entity(entity.Name)
+                    .Property(property.Name)
+                    .HasColumnType("NUMBER");
+            }
+            else if (clrType == typeof(DateTime) || clrType == typeof(DateTime?))
+            {
+                // 日期时间类型配置
+                modelBuilder.Entity(entity.Name)
+                    .Property(property.Name)
+                    .HasColumnType("DATE");
+            }
         }
     }
 

@@ -39,15 +39,16 @@ public class RepositoryFactory(ICurrentUserService currentUserService) : IReposi
         switch (dbType)
         {
             case "SqlServer":
-                // TODO 
-                // database = new SqlServerDatabase(dbConnectionString);
+                DbHelper.DbType = DatabaseType.SqlServer;
+                database = new SqlServerDatabase(category, dbConnectionString, dbTimeout);
                 break;
             case "MySql":
                 DbHelper.DbType = DatabaseType.MySql;
                 database = new MySqlDatabase(category, dbConnectionString, dbTimeout);
                 break;
             case "Oracle":
-                // TODO
+                DbHelper.DbType = DatabaseType.Oracle;
+                database = new OracleDatabase(category, dbConnectionString, dbTimeout);
                 break;
             case "PostgreSql":
                 DbHelper.DbType = DatabaseType.PostgreSql;

@@ -12,6 +12,9 @@ using Oracle.ManagedDataAccess.Client;
 
 namespace LeSi.Admin.Infrastructure.Extensions
 {
+    /// <summary>
+    /// 数据库扩展方法
+    /// </summary>
     public static class DatabasesExtension
     {
         /// <summary>

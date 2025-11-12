@@ -5,11 +5,14 @@ using LeSi.Admin.Infrastructure.Extensions;
 
 namespace LeSi.Admin.Infrastructure.Data.Database;
 
-public class DatabaseParameterFactory: IDatabaseParameterFactory
+/// <summary>
+/// 数据库参数工厂
+/// </summary>
+public class DatabaseParameterFactory : IDatabaseParameterFactory
 {
-    public DbParameter CreateParameter() 
+    public DbParameter CreateParameter()
         => DatabasesExtension.CreateDbParameter();
 
-    public DbParameter CreateParameter(string paramName, object value) 
+    public DbParameter CreateParameter(string paramName, object value)
         => DatabasesExtension.CreateDbParameter(paramName, value);
 }
