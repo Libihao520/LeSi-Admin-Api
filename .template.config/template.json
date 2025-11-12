@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "LeSi",
+  "classifications": [ "NET9", "AdminWebApi" ],
+  "identity": "LeSi.Admin.01",
+  "name": "乐思AdminWebApi项目模板",
+  "description": "一个用于创建AdminWebApi项目的模板。",
+  "shortName": "LesiAdminV2",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "LeSi"
+}
